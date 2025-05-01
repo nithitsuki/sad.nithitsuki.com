@@ -2,7 +2,7 @@
 
 A website designed to help students track their attendance and maintain their desired attendance percentage.
 
-![Attendance Dashboard](https://github.com/nithitsuki/class-skipulator/blob/main/public/screenshot1.0.png)
+![Attendance Dashboard](https://github.com/nithitsuki/class-skipulator/blob/main/public/Screenshot-1.0.png)
 
 ## 🎯 Overview
 
