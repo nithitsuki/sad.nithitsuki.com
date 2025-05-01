@@ -39,34 +39,74 @@ interface InputAreaProps {
 export default function InputArea({ onCancel }: InputAreaProps) {
 
     const formSchema = z.object({
-        subjectname: z.string().min(2).max(50),
-        classesperweek: z.coerce.number({
+        subjectName: z.string().min(2).max(50),
+        No_ClassesPerWeek: z.coerce.number({
           invalid_type_error: "Required",
           required_error: "Required"
         }).int().min(1).max(6),
-        classesoccured: z.coerce.number({
+        ClassesOccurred: z.coerce.number({
           invalid_type_error: "Required",
           required_error: "Required"
         }).int().min(1).max(99),
-        classesattended: z.coerce.number({
+        ClassesAttended: z.coerce.number({
           invalid_type_error: "Required", 
           required_error: "Required"
-        }).int().min(1).max(99)
+        }).int().min(1).max(99),
+        MinAttendancePercentage: z.number().int().min(0).max(100),
       }).refine(
-        (data) => data.classesattended <= data.classesoccured,
+        (data) => data.ClassesAttended <= data.ClassesOccurred,
         {
           message: "Cannot exceed classes occurred",
-          path: ["classesattended"]
+          path: ["ClassesAttended"]
         }
       );
     
     const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema),defaultValues: {
+            MinAttendancePercentage: 75, // Set the actual default value
+        },
     })
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
+        try {
+            // Retrieve existing data from localStorage
+            
+            const existingData = localStorage.getItem('subjectsData');
+            let subjectsArray = [];
+
+            if (existingData) {
+            try {
+                subjectsArray = JSON.parse(existingData);
+                // Ensure it's an array
+                if (!Array.isArray(subjectsArray)) {
+                console.error("Existing data in localStorage is not an array. Resetting.");
+                subjectsArray = [];
+                }
+            } catch (error) {
+                console.error("Error parsing existing data from localStorage:", error);
+                // If parsing fails, reset to an empty array
+                subjectsArray = [];
+            }
+            }
+
+            // Add the new subject data to the array
+            subjectsArray.push(values);
+
+            // Save the updated array back to localStorage
+            localStorage.setItem('subjectsData', JSON.stringify(subjectsArray));
+            console.log("Data saved to localStorage:", subjectsArray);
+            // Optionally, reset the form or call onCancel after successful submission
+            form.reset(); // Reset form fields
+            if (onCancel) {
+            onCancel(); // Call the cancel handler (e.g., to close a modal)
+            }
+
+        } catch (error) {
+            console.error("Error saving data to localStorage:", error);
+            // Handle potential storage errors (e.g., storage full)
+        }
     }
 
     return (
@@ -82,7 +122,7 @@ export default function InputArea({ onCancel }: InputAreaProps) {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="">
                         <FormField
                             control={form.control}
-                            name="subjectname"
+                            name="subjectName"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Subject Name: </FormLabel>
@@ -98,7 +138,7 @@ export default function InputArea({ onCancel }: InputAreaProps) {
                         <div className="flex flex-wrap gap-4 items-start justify-center mt-5">
                         <FormField
                             control={form.control}
-                            name="classesperweek"
+                            name="No_ClassesPerWeek"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>No Classes Per Week: </FormLabel>
@@ -122,7 +162,7 @@ export default function InputArea({ onCancel }: InputAreaProps) {
                         
                         <FormField
                             control={form.control}
-                            name="classesoccured"
+                            name="ClassesOccurred"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Classes Occurred: </FormLabel>
@@ -142,7 +182,7 @@ export default function InputArea({ onCancel }: InputAreaProps) {
                         
                         <FormField
                             control={form.control}
-                            name="classesattended"
+                            name="ClassesAttended"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Classes Attended: </FormLabel>
@@ -159,6 +199,26 @@ export default function InputArea({ onCancel }: InputAreaProps) {
                                 </FormItem>
                             )}
                         />    
+                        <FormField
+                            control={form.control}
+                            name="MinAttendancePercentage"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Min Attendance %: </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="number"
+                                            placeholder="Min Attendance %"
+                                            className="w-[120px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                            {...field}
+                                            value={field.value || 75}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />    
+
                         </div>
                         <div className="flex flex-wrap gap-4 items-start justify-center mt-5">
                         <Button type="submit" className="mt-3 item-center">Add Subject</Button>
