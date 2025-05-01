@@ -32,8 +32,11 @@ import {
 
 import { Input } from "@/components/ui/input"
 
+interface InputAreaProps {
+    onCancel: () => void;
+}
 
-export default function InputArea() {    
+export default function InputArea({ onCancel }: InputAreaProps) {
 
     const formSchema = z.object({
         subjectname: z.string().min(2).max(50),
@@ -159,6 +162,7 @@ export default function InputArea() {
                         </div>
                         <div className="flex flex-wrap gap-4 items-start justify-center mt-5">
                         <Button type="submit" className="mt-3 item-center">Add Subject</Button>
+                        <Button onClick={onCancel} className="mt-3 item-center">Cancel</Button>
                         </div>
 
                     </form>
