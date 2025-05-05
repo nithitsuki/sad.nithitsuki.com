@@ -1,0 +1,58 @@
+[
+    {
+        "subjectName": "Glimpses of Glorious India",
+        "ClassesAttended": 29,
+        "ClassesSkipped": 3,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "Coding Classes",
+        "ClassesAttended": 14,
+        "ClassesSkipped": 4,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "Object Oriented Programming",
+        "ClassesAttended": 62,
+        "ClassesSkipped": 10,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "User Interface Design",
+        "ClassesAttended": 47,
+        "ClassesSkipped": 5,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "Discrete Mathematics",
+        "ClassesAttended": 54,
+        "ClassesSkipped": 14,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "Linear Algebra",
+        "ClassesAttended": 51,
+        "ClassesSkipped": 13,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "Manufacturing Practice",
+        "ClassesAttended": 30,
+        "ClassesSkipped": 10,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    },
+    {
+        "subjectName": "Modern Physics",
+        "ClassesAttended": 35,
+        "ClassesSkipped": 8,
+        "MinAttendancePercentage": 75,
+        "No_ClassesPerWeek": 2
+    }
+]

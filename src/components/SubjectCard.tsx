@@ -6,9 +6,10 @@ import { number } from 'zod';
 interface SubjectCardProps {
     subjectName: string;
     No_ClassesPerWeek: number;
-    ClassesOccurred: number;
+    ClassesSkipped: number;
     ClassesAttended: number;
     MinAttendancePercentage: number;
+    UpdateStorageFunction: (subjectName: string, attribute: string, newValue: number) => void;
 }
 
 const deleteSubject = (subjectName: string) => {
@@ -37,9 +38,9 @@ const deleteSubject = (subjectName: string) => {
     }
 };
 
-export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesOccurred, ClassesAttended, MinAttendancePercentage }: SubjectCardProps) {
-    const Attendance = ((ClassesAttended / ClassesOccurred) * 100).toFixed(2);
-    const ClassesSkipped = ClassesOccurred - ClassesAttended;
+export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSkipped, ClassesAttended, MinAttendancePercentage, UpdateStorageFunction}: SubjectCardProps) {
+    const ClassesOccured = ClassesSkipped + ClassesAttended;
+    const Attendance = ((ClassesAttended / ClassesOccured) * 100).toFixed(2);
     const SkippableClasses = Math.floor((ClassesAttended * (100 - MinAttendancePercentage) / MinAttendancePercentage) - ClassesSkipped);
     const AttendancePercentageRounded = Math.floor(+Attendance); // Convert Attendance string to number and floor it
     const borderColor =
@@ -48,26 +49,56 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesOcc
         AttendancePercentageRounded >= MinAttendancePercentage - 10 ? '#EF4444CC' : '#B91C1CCC'; // Dark Red with 80% opacity
 
     return(
-        <div>
-                <Card className="m-2 p-4" style={{ border: `5px solid ${borderColor}` }}>
+        <div className='w-full h-auto sm:w-auto'>
+                <Card className="m-2 p-0 sm:p-4" style={{ border: `5px solid ${borderColor}` }}>
                     {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                     <div className="pb-0 pt-1 pl-2 pr-2 rounded">
-                    <CardTitle className='mb-2'>{subjectName}</CardTitle>
+                    <div className='flex justify-between'>
+                    <CardTitle className='mb-2'>{subjectName} - [{ClassesOccured}]</CardTitle>
+                    <a onClick={() => alert("Editing Functionality not yet supported")} className="cursor-pointer">✎</a>
+                    </div>
                     <hr></hr>
-                    <div className="flex flex-col gap-2">
-                        <p>Classes Occurred: {ClassesOccurred}</p>
-                        <p>Classes Attended: {ClassesAttended}</p>
-                        <p>How many You have skipped: {ClassesSkipped}</p>
-                        <p>How many more you can skip: {Math.floor(SkippableClasses)}</p>
-                        <div>
-                            <div className="flex items-center gap-4"> {/* Flex container */}
-                                <div style={{ width: 120, height: 120 }}> {/* Chart container */}
+                    <div className="flex flex-row justify-between sm:flex-col gap-2">
+                        <div className="inline" id='textinfo'>
+                        
+                          <p>Classes Attended:  <br className='sm:hidden'/>
+                          <input 
+                            type="number"
+                            value={ClassesAttended}
+                            className="w-16 inline-block bg-background border rounded px-2 py-1"
+                            onChange={(e) => {
+                                const newValue = parseInt(e.target.value) || 0;
+                                
+                                UpdateStorageFunction(subjectName, "ClassesOccured", ClassesOccured + 1);
+                                UpdateStorageFunction(subjectName, "ClassesAttended", newValue);
+                                console.log("Updated attendance:", newValue);
+                            }}
+                            onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
+                        /></p>
+                          <br className='sm:hidden'/>
+                          <p>You have skipped:<br className='sm:hidden'/>
+                          <input 
+                            type="number"
+                            value={ClassesSkipped}
+                            className="w-16 inline-block bg-background border rounded px-2 py-1"
+                            onChange={(e) => {
+                                const newValue = parseInt(e.target.value) || 0;
+                                
+                                UpdateStorageFunction(subjectName, "ClassesOccured", ClassesOccured + 1);
+                                UpdateStorageFunction(subjectName, "ClassesAttended", newValue);
+                                console.log("Updated attendance:", newValue);
+                            }}
+                            onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
+                        /></p>
+                        </div>
+                            <div className="flex items-center gap-4" id='PieChart_n_SkippableClasses'> {/* Flex container */}
+                                <div className='w-30 h-30 sm:w-[120] sm:h-[120] m-0 p-0'> {/* Chart container */}
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
                                             <Pie
                                                 data={[
                                                     { name: 'ClassesAttended', value: ClassesAttended },
-                                                    { name: 'Missed', value: ClassesOccurred - ClassesAttended },
+                                                    { name: 'Missed', value: ClassesOccured - ClassesAttended },
                                                 ]}
                                                 innerRadius={30}
                                                 outerRadius={50}
@@ -87,20 +118,23 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesOcc
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </div>
-                                <div> {/* Text container */}
+                                
+                                <div id='SkippableClasses' className='w-[80px] sm:w-auto'> {/* Text container */}
                                     <p className="text-sm text-muted-foreground">Skippable Classes:</p>
-                                    
                                     <svg  viewBox="0 0 90 90"> {/* Example dimensions */}
                                         <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="5rem" fontWeight="regular" fill="var(--foreground)">
                                                     {`${SkippableClasses}`}
                                         </text>
                                     </svg>
                                 </div>
+
                             </div>
+
                             <hr></hr>
-                            <p className="text-red-500 text-center cursor-pointer" onClick={() => deleteSubject(subjectName)}>Delete Subject</p>
-                            </div>
+                            {/* </div> */}
                         </div>
+                        <p className="text-red-500 text-center cursor-pointer" onClick={() => deleteSubject(subjectName)}>Delete Subject</p>
+
                     </div>
                 </Card>
         </div>
