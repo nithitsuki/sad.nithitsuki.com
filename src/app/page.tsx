@@ -96,9 +96,10 @@ export default function Home() {
       {showInputArea && <InputArea onCancel={() => setShowInputArea(false)} />}
 
       <div
-        className="flex flex-wrap gap-4 items-start justify-center mt-5"
+        className="flex flex-wrap gap-0 sm:gap-4 m-0 sm:mt-5 items-start justify-center "
         id="subject-cards"
       >
+        <br className="m-2 sm:hidden"></br>
         {subjectsData.map((subject, index) => (
           <SubjectCard
             key={index} // It's better to use a unique ID if available
