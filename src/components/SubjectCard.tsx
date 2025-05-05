@@ -85,8 +85,8 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
                                 const newValue = parseInt(e.target.value) || 0;
                                 
                                 UpdateStorageFunction(subjectName, "ClassesOccured", ClassesOccured + 1);
-                                UpdateStorageFunction(subjectName, "ClassesAttended", newValue);
-                                console.log("Updated attendance:", newValue);
+                                UpdateStorageFunction(subjectName, "ClassesSkipped", newValue);
+                                console.log("Updated skipped classes:", newValue);
                             }}
                             onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
                         /></p>
