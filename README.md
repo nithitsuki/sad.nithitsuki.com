@@ -57,7 +57,10 @@ I'm also looking to improve Student Attendance Dashboard (S.A.D). Here are some 
 
 The following features are listed in order of priority (highest to lowest):
 
-- [ ] **Edit Attendance Info**: Easily update the number of classes attended or occurred for an existing subject.
+
+- [ ] **Auto Fetch attendance from supported sources**: Automatically sync attendance data from university portals, eliminating manual entry.
+- [ ] **Mobile Version using Capacitor.js**: Develop a native mobile application for iOS and Android for a seamless experience on the go.
+- [ ] **Microsoft oAuth Login**: Implement OAuth to allow users to sign in and synchronize their attendance data across multiple devices.
 - [ ] **Edit Subject Data**: Allow modification of subject name or classes per week after initial creation.
 - [ ] **Improved UI/UX**: Enhance the application's visual design and usability.
 - [ ] **Customizable Requirements**: Set different attendance percentage requirements per subject.
