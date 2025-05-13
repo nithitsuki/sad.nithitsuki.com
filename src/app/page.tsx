@@ -4,6 +4,7 @@ import InputArea from "@/components/InputArea";
 import SubjectCard from "@/components/SubjectCard";
 import { Button } from "@/components/ui/button";
 import defaultSubjectsData from "@/../public/default-amrta-cse-sem2.json" assert { type: "json" };
+import Navbar from "@/components/Navbar";
 
 interface SubjectData {
   subjectName: string;
@@ -65,33 +66,40 @@ export default function Home() {
     payload = `You have no subjects. Click on "Add a Subject" to add one.`;
   } else if (subjectsData.length === 1) {
     payload = `You have ${subjectsData.length} subject. Click on "Add a Subject" to add more.`;
-  } 
+  }
   else {
     payload = `You have ${subjectsData.length} subjects. Click on "Add a Subject" to add more.`;
   }
 
-  
+
   return (
     <div>
+      <Navbar>
+        <Button onClick={() => setShowInputArea(true)} className="m-[6px] bg-gray-400">
+          Add a Subject
+        </Button>
+        <label>rn, {subjectsData.length} subjects</label>
+      </Navbar>
+
       <div className="flex flex-col items-center">
-        <h1>Student Attendance Dashboard</h1>
+        <h1 className="p-0 m-0">Student Attendance Dashboard</h1>
       </div>
-      
+      {/* 
       <div className="flex flex-wrap gap-4 items-start justify-center mt-5">
         {!showInputArea && (
           <div>
-            <label className="text-lg ">
+            <p className="text-lg m-0 text-center">
               {payload}
-            </label>
+            </p>
             <br></br>
             <div className="flex justify-center">
               <Button onClick={() => setShowInputArea(true)} className="mt-2">
-              Add a Subject
+                Add a Subject
               </Button>
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       {showInputArea && <InputArea onCancel={() => setShowInputArea(false)} />}
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, CardTitle } from './ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { number } from 'zod';
+import { MyPieChart } from './MyPieChart';
 
 interface SubjectCardProps {
     subjectName: string;
@@ -39,14 +38,29 @@ const deleteSubject = (subjectName: string) => {
 };
 
 export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSkipped, ClassesAttended, MinAttendancePercentage, UpdateStorageFunction}: SubjectCardProps) {
-    const ClassesOccured = ClassesSkipped + ClassesAttended;
-    const Attendance = ((ClassesAttended / ClassesOccured) * 100).toFixed(2);
-    const SkippableClasses = Math.floor((ClassesAttended * (100 - MinAttendancePercentage) / MinAttendancePercentage) - ClassesSkipped);
-    const AttendancePercentageRounded = Math.floor(+Attendance); // Convert Attendance string to number and floor it
-    const borderColor =
+    const ClassesOccured = React.useMemo(() => ClassesSkipped + ClassesAttended, [ClassesSkipped, ClassesAttended]);
+    
+    const Attendance = React.useMemo(() => 
+        ((ClassesAttended / ClassesOccured) * 100).toFixed(2), 
+        [ClassesAttended, ClassesOccured]
+    );
+    
+    const SkippableClasses = React.useMemo(() => 
+        Math.floor((ClassesAttended * (100 - MinAttendancePercentage) / MinAttendancePercentage) - ClassesSkipped),
+        [ClassesAttended, MinAttendancePercentage, ClassesSkipped]
+    );
+    
+    const AttendancePercentageRounded = React.useMemo(() => 
+        Math.floor(+Attendance), 
+        [Attendance]
+    );
+    
+    const borderColor = React.useMemo(() => 
         AttendancePercentageRounded >= MinAttendancePercentage + 10 ? '#22C55ECC' : // Green with 80% opacity
         AttendancePercentageRounded >= MinAttendancePercentage ? '#F97316CC' : // Orange with 80% opacity
-        AttendancePercentageRounded >= MinAttendancePercentage - 10 ? '#EF4444CC' : '#B91C1CCC'; // Dark Red with 80% opacity
+        AttendancePercentageRounded >= MinAttendancePercentage - 10 ? '#EF4444CC' : '#B91C1CCC', // Dark Red with 80% opacity
+        [AttendancePercentageRounded, MinAttendancePercentage]
+    );
 
     return(
         <div className='w-full h-auto sm:w-auto'>
@@ -93,30 +107,11 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
                         </div>
                             <div className="flex items-center gap-4" id='PieChart_n_SkippableClasses'> {/* Flex container */}
                                 <div className='w-30 h-30 sm:w-[120] sm:h-[120] m-0 p-0'> {/* Chart container */}
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={[
-                                                    { name: 'ClassesAttended', value: ClassesAttended },
-                                                    { name: 'Missed', value: ClassesOccured - ClassesAttended },
-                                                ]}
-                                                innerRadius={30}
-                                                outerRadius={50}
-                                                paddingAngle={0}
-                                                dataKey="value"
-                                                startAngle={90}
-                                                endAngle={-270}
-                                                labelLine={false} // Hide the default label line
-                                            >
-                                                <Cell key={`cell-attended`} fill="#10B981" /> {/* Green for attended */}
-                                                <Cell key={`cell-missed`} fill="#EF4444" /> {/* Red for missed */}
-                                            </Pie>
-                                            {/* Add text in the center */}
-                                            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="1rem" fontWeight="regular" fill="var(--foreground)">
-                                                {`${AttendancePercentageRounded}%`}
-                                            </text>
-                                        </PieChart>
-                                    </ResponsiveContainer>
+                                    <MyPieChart 
+                                        ClassesOccured={ClassesOccured}
+                                        ClassesAttended={ClassesAttended}
+                                        AttendancePercentageRounded={AttendancePercentageRounded}
+                                    />
                                 </div>
                                 
                                 <div id='SkippableClasses' className='w-[80px] sm:w-auto'> {/* Text container */}
