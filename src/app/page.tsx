@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import InputArea from "@/components/InputArea";
 import SubjectCard from "@/components/SubjectCard";
 import { Button } from "@/components/ui/button";
-import  QueryHandler from "@/components/computations/QueryHandler";
 import defaultSubjectsData from "@/../public/default-amrta-cse-sem2.json" assert { type: "json" };
 import Navbar from "@/components/Navbar";
 
@@ -86,7 +85,7 @@ export default function Home() {
       </Button>
       <label>rn, {subjectsData.length} subjects</label>
       </Navbar> */}
-      <QueryHandler />
+      
       <div className="flex flex-col items-center">
       <h1 className="p-0 m-0">Student Attendance Dashboard</h1>
       </div>
