@@ -1,58 +1,90 @@
 [
     {
-        "subjectName": "Glimpses of Glorious India",
-        "ClassesAttended": 29,
-        "ClassesSkipped": 3,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "Coding Classes",
-        "ClassesAttended": 14,
-        "ClassesSkipped": 4,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "Object Oriented Programming",
-        "ClassesAttended": 62,
-        "ClassesSkipped": 10,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "User Interface Design",
-        "ClassesAttended": 47,
-        "ClassesSkipped": 5,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "Discrete Mathematics",
-        "ClassesAttended": 54,
-        "ClassesSkipped": 14,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "Linear Algebra",
-        "ClassesAttended": 51,
-        "ClassesSkipped": 13,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "Manufacturing Practice",
-        "ClassesAttended": 30,
-        "ClassesSkipped": 10,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    },
-    {
-        "subjectName": "Modern Physics",
-        "ClassesAttended": 35,
-        "ClassesSkipped": 8,
-        "MinAttendancePercentage": 75,
-        "No_ClassesPerWeek": 2
-    }
+    "Course": "22ADM111Glimpses of Glorious India",
+    "Sl_No": "1",
+    "absent": "3",
+    "dutyLeave": "0",
+    "faculty": "Madhvi Rameshwar Prasad",
+    "medical": "0",
+    "percentage": "90.63",
+    "present": "29",
+    "total": "32"
+  },
+  {
+    "Course": "23CSE000Coding Classes",
+    "Sl_No": "2",
+    "absent": "4",
+    "dutyLeave": "0",
+    "faculty": "SHINU M R",
+    "medical": "0",
+    "percentage": "77.78",
+    "present": "14",
+    "total": "18"
+  },
+  {
+    "Course": "23CSE111Object Oriented Programming",
+    "Sl_No": "3",
+    "absent": "10",
+    "dutyLeave": "1",
+    "faculty": "B Saranya devi",
+    "medical": "0",
+    "percentage": "86.11",
+    "present": "61",
+    "total": "72"
+  },
+  {
+    "Course": "23CSE113User Interface Design",
+    "Sl_No": "4",
+    "absent": "5",
+    "dutyLeave": "1",
+    "faculty": "SHINU M R",
+    "medical": "0",
+    "percentage": "90.38",
+    "present": "46",
+    "total": "52"
+  },
+  {
+    "Course": "23MAT116Discrete Mathematics",
+    "Sl_No": "5",
+    "absent": "14",
+    "dutyLeave": "1",
+    "faculty": "K. N. Meera",
+    "medical": "0",
+    "percentage": "79.41",
+    "present": "53",
+    "total": "68"
+  },
+  {
+    "Course": "23MAT117Linear Algebra",
+    "Sl_No": "6",
+    "absent": "13",
+    "dutyLeave": "1",
+    "faculty": "Naveen Kumar R",
+    "medical": "0",
+    "percentage": "79.69",
+    "present": "50",
+    "total": "64"
+  },
+  {
+    "Course": "23MEE115Manufacturing Practice",
+    "Sl_No": "7",
+    "absent": "10",
+    "dutyLeave": "0",
+    "faculty": "DILEEP B.P.Divya Sharma S GShankara",
+    "medical": "0",
+    "percentage": "75",
+    "present": "30",
+    "total": "40"
+  },
+  {
+    "Course": "23PHY115Modern Physics",
+    "Sl_No": "8",
+    "absent": "8",
+    "dutyLeave": "1",
+    "faculty": "H Manjunatha",
+    "medical": "0",
+    "percentage": "81.4",
+    "present": "34",
+    "total": "43"
+  }
 ]

@@ -3,21 +3,27 @@ import { Card, CardTitle } from './ui/card';
 import { MyPieChart } from './MyPieChart';
 
 interface SubjectCardProps {
-    subjectName: string;
-    No_ClassesPerWeek: number;
-    ClassesSkipped: number;
-    ClassesAttended: number;
+    Course: string;        // Course code and name
+    Sl_No?: string;         // Serial number
+    present: number;        // Classes attended
+    absent: number;         // Classes skipped
+    dutyLeave: number;      // Duty leave count
+    medical: number;        // Medical leave count
+    total: number;          // Total classes occurred
+    percentage: string;     // Attendance percentage
+    faculty?: string;       // Faculty name
+    No_ClassesPerWeek: number; // Number of classes per week
     MinAttendancePercentage: number;
-    UpdateStorageFunction: (subjectName: string, attribute: string, newValue: number) => void;
+    UpdateStorageFunction: (Course: string, attribute: string, newValue: number) => void;
 }
 
-const deleteSubject = (subjectName: string) => {
+const deleteSubject = (Course: string) => {
     try {
         const storedSubjects = localStorage.getItem('subjectsData');
         if (storedSubjects) {
             let subjects: SubjectCardProps[] = JSON.parse(storedSubjects);
             // Find the index of the subject to remove
-            const indexToRemove = subjects.findIndex(subject => subject.subjectName === subjectName);
+            const indexToRemove = subjects.findIndex(subject => subject.Course === Course);
 
             // If the subject is found (index is not -1), remove it
             if (indexToRemove > -1) {
@@ -29,16 +35,17 @@ const deleteSubject = (subjectName: string) => {
         // NOTE: This only removes the item from localStorage.
         // You'll likely need additional logic (e.g., updating state in a parent component)
         // to remove the card from the UI.
-        console.log(`Subject "${subjectName}" removed from localStorage.`);
+        console.log(`Subject "${Course}" removed from localStorage.`);
         // Force a re-render if necessary, e.g., by updating parent state
         window.dispatchEvent(new Event('storage')); // Basic way to notify other parts of the app
     } catch (error) {
-        console.error(`Error removing subject "${subjectName}" from localStorage:`, error);
+        console.error(`Error removing subject "${Course}" from localStorage:`, error);
     }
 };
 
-export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSkipped, ClassesAttended, MinAttendancePercentage, UpdateStorageFunction}: SubjectCardProps) {
-    const ClassesOccured = React.useMemo(() => ClassesSkipped + ClassesAttended, [ClassesSkipped, ClassesAttended]);
+export default function SubjectCard({ Course, No_ClassesPerWeek, absent, total, MinAttendancePercentage, UpdateStorageFunction}: SubjectCardProps) {
+    const ClassesAttended = React.useMemo(() => total - absent, [total, absent]);
+    const ClassesOccured = total;
     
     const Attendance = React.useMemo(() => 
         ((ClassesAttended / ClassesOccured) * 100).toFixed(2), 
@@ -46,8 +53,8 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
     );
     
     const SkippableClasses = React.useMemo(() => 
-        Math.floor((ClassesAttended * (100 - MinAttendancePercentage) / MinAttendancePercentage) - ClassesSkipped),
-        [ClassesAttended, MinAttendancePercentage, ClassesSkipped]
+        Math.floor((ClassesAttended * (100 - MinAttendancePercentage) / MinAttendancePercentage) - absent),
+        [ClassesAttended, MinAttendancePercentage, absent]
     );
     
     const AttendancePercentageRounded = React.useMemo(() => 
@@ -68,7 +75,7 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
                     {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                     <div className="pb-0 pt-1 pl-2 pr-2 rounded">
                     <div className='flex justify-between'>
-                    <CardTitle className='mb-2'>{subjectName} - [{ClassesOccured}]</CardTitle>
+                    <CardTitle className='mb-2'>{Course} - [{ClassesOccured}]</CardTitle>
                     <a onClick={() => alert("Editing Functionality not yet supported")} className="cursor-pointer">✎</a>
                     </div>
                     <hr></hr>
@@ -83,8 +90,8 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
                             onChange={(e) => {
                                 const newValue = parseInt(e.target.value) || 0;
                                 
-                                UpdateStorageFunction(subjectName, "ClassesOccured", ClassesOccured + 1);
-                                UpdateStorageFunction(subjectName, "ClassesAttended", newValue);
+                                UpdateStorageFunction(Course, "ClassesOccured", ClassesOccured + 1);
+                                UpdateStorageFunction(Course, "ClassesAttended", newValue);
                                 console.log("Updated attendance:", newValue);
                             }}
                             onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
@@ -93,13 +100,13 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
                           <p>You have skipped:<br className='sm:hidden'/>
                           <input 
                             type="number"
-                            value={ClassesSkipped}
+                            value={absent}
                             className="w-16 inline-block bg-background border rounded px-2 py-1"
                             onChange={(e) => {
                                 const newValue = parseInt(e.target.value) || 0;
                                 
-                                UpdateStorageFunction(subjectName, "ClassesOccured", ClassesOccured + 1);
-                                UpdateStorageFunction(subjectName, "ClassesSkipped", newValue);
+                                UpdateStorageFunction(Course, "ClassesOccured", ClassesOccured + 1);
+                                UpdateStorageFunction(Course, "absent", newValue);
                                 console.log("Updated skipped classes:", newValue);
                             }}
                             onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
@@ -128,7 +135,7 @@ export default function SubjectCard({ subjectName, No_ClassesPerWeek, ClassesSki
                             <hr></hr>
                             {/* </div> */}
                         </div>
-                        <p className="text-red-500 text-center cursor-pointer" onClick={() => deleteSubject(subjectName)}>Delete Subject</p>
+                        <p className="text-red-500 text-center cursor-pointer" onClick={() => deleteSubject(Course)}>Delete Subject</p>
 
                     </div>
                 </Card>
