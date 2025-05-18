@@ -75,7 +75,7 @@ export default function SubjectCard({ Course, No_ClassesPerWeek, absent, total, 
                     {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                     <div className="pb-0 pt-1 pl-2 pr-2 rounded">
                     <div className='flex justify-between'>
-                    <CardTitle className='mb-2'>{Course} - [{ClassesOccured}]</CardTitle>
+                    <CardTitle className='mb-2 sm:max-w-[200px]'>{Course} - [{ClassesOccured}]</CardTitle>
                     <a onClick={() => alert("Editing Functionality not yet supported")} className="cursor-pointer">✎</a>
                     </div>
                     <hr></hr>
