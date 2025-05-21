@@ -1,6 +1,6 @@
 [
-    {
-    "Course": "22ADM111Glimpses of Glorious India",
+  {
+    "Course": "history",
     "Sl_No": "1",
     "absent": "3",
     "dutyLeave": "0",
@@ -11,7 +11,7 @@
     "total": "32"
   },
   {
-    "Course": "23CSE000Coding Classes",
+    "Course": "coding",
     "Sl_No": "2",
     "absent": "4",
     "dutyLeave": "0",
@@ -22,7 +22,7 @@
     "total": "18"
   },
   {
-    "Course": "23CSE111Object Oriented Programming",
+    "Course": "Java",
     "Sl_No": "3",
     "absent": "10",
     "dutyLeave": "1",
@@ -33,7 +33,7 @@
     "total": "72"
   },
   {
-    "Course": "23CSE113User Interface Design",
+    "Course": "UID",
     "Sl_No": "4",
     "absent": "5",
     "dutyLeave": "1",
@@ -44,7 +44,7 @@
     "total": "52"
   },
   {
-    "Course": "23MAT116Discrete Mathematics",
+    "Course": "mathematics",
     "Sl_No": "5",
     "absent": "14",
     "dutyLeave": "1",
@@ -55,7 +55,7 @@
     "total": "68"
   },
   {
-    "Course": "23MAT117Linear Algebra",
+    "Course": "algebra",
     "Sl_No": "6",
     "absent": "13",
     "dutyLeave": "1",
@@ -66,7 +66,7 @@
     "total": "64"
   },
   {
-    "Course": "23MEE115Manufacturing Practice",
+    "Course": "mechanical",
     "Sl_No": "7",
     "absent": "10",
     "dutyLeave": "0",
@@ -77,7 +77,7 @@
     "total": "40"
   },
   {
-    "Course": "23PHY115Modern Physics",
+    "Course": "physics",
     "Sl_No": "8",
     "absent": "8",
     "dutyLeave": "1",

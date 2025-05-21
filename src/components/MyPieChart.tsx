@@ -2,6 +2,7 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 interface MyPieChartProps {
+    className?: string,
     ClassesOccured: number,
     ClassesAttended: number,
     AttendancePercentageRounded: number
@@ -9,9 +10,10 @@ interface MyPieChartProps {
 export function MyPieChart({
     ClassesOccured,
     ClassesAttended,
+    className,
     AttendancePercentageRounded
 }: MyPieChartProps) {
-    return <ResponsiveContainer width="100%" height="100%">
+    return <ResponsiveContainer width="100%" height="100%" className={className}>
         <PieChart>
             <Pie data={[{
                 name: 'ClassesAttended',
