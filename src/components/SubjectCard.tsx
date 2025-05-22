@@ -62,10 +62,38 @@ export default function SubjectCard({ Course, No_ClassesPerWeek, absent, total, 
         [Attendance]
     );
 
+    const calculateColor = (percentage: number, minPercentage: number): string => {
+        if (percentage >= 90) {
+            // Transition from deep green to less saturated green (100% -> 90%)
+            const ratio = (percentage - 90) / 10;
+            const red = Math.round(50 * (1 - ratio));
+            const green = Math.round(160 + (70 * ratio));
+            const blue = Math.round(50 * (1 - ratio));
+            return `rgb(${red}, ${green}, ${blue})`;
+        } else if (percentage >= 80) {
+            // Smoother transition from less saturated green to unsaturated orange (90% -> 80%)
+            const ratio = (percentage - 80) / 10;
+            // Starting with a less saturated green at 90% (around rgb(50, 160, 50))
+            // Moving to an unsaturated orange at 80% (rgb(255, 119, 0))
+            const red = Math.round(50 + (205 * (1 - ratio)));
+            const green = Math.round(160 - (41 * (1 - ratio)));
+            const blue = Math.round(50 - (50 * (1 - ratio)));
+            return `rgb(${red}, ${green}, ${blue})`;
+        } else if (percentage >= minPercentage) {1
+            // Transition from unsaturated orange to red (80% -> minPercentage)
+            const ratio = (percentage - minPercentage) / (80 - minPercentage);
+            const red = 255;
+            const green = Math.round(119 * ratio);
+            const blue = 0;
+            return `rgb(${red}, ${green}, ${blue})`;
+        } else {
+            // Below minimum attendance - solid red
+            return '#FF0000';
+        }
+    };
+
     const borderColor = React.useMemo(() =>
-        AttendancePercentageRounded >= MinAttendancePercentage + 10 ? '#22C55ECC' : // Green with 80% opacity
-            AttendancePercentageRounded >= MinAttendancePercentage ? '#F97316CC' : // Orange with 80% opacity
-                AttendancePercentageRounded >= MinAttendancePercentage - 10 ? '#EF4444CC' : '#B91C1CCC', // Dark Red with 80% opacity
+        calculateColor(AttendancePercentageRounded, MinAttendancePercentage),
         [AttendancePercentageRounded, MinAttendancePercentage]
     );
 
@@ -128,6 +156,7 @@ export default function SubjectCard({ Course, No_ClassesPerWeek, absent, total, 
                                     ClassesOccured={ClassesOccured}
                                     ClassesAttended={ClassesAttended}
                                     AttendancePercentageRounded={AttendancePercentageRounded}
+                                    backgroundColor={borderColor}
                                 />
                             </div>
                             <div className='flex-row w-max'>

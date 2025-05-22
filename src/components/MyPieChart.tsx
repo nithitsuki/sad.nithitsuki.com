@@ -5,14 +5,17 @@ interface MyPieChartProps {
     className?: string,
     ClassesOccured: number,
     ClassesAttended: number,
+    backgroundColor?: string,
     AttendancePercentageRounded: number
 }
 export function MyPieChart({
     ClassesOccured,
     ClassesAttended,
     className,
+    backgroundColor,
     AttendancePercentageRounded
 }: MyPieChartProps) {
+    if(backgroundColor === "") { backgroundColor = "#10B981"; }
     return <ResponsiveContainer width="100%" height="100%" className={className}>
         <PieChart>
             <Pie data={[{
@@ -23,7 +26,7 @@ export function MyPieChart({
                 value: ClassesOccured - ClassesAttended
             }]} innerRadius={30} outerRadius={50} paddingAngle={0} dataKey="value" startAngle={90} endAngle={-270} labelLine={false} // Hide the default label line
             >
-                <Cell key={`cell-attended`} fill="#10B981" /> {
+                <Cell key={`cell-attended`} fill={backgroundColor} /> {
                     /* Green for attended */
                 }
                 <Cell key={`cell-missed`} fill="#EF4444" /> {
