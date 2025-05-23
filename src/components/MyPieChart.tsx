@@ -3,14 +3,14 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 interface MyPieChartProps {
     className?: string,
-    ClassesOccured: number,
-    ClassesAttended: number,
+    total: number,
+    present: number,
     backgroundColor?: string,
     AttendancePercentageRounded: number
 }
 export function MyPieChart({
-    ClassesOccured,
-    ClassesAttended,
+    total,
+    present,
     className,
     backgroundColor,
     AttendancePercentageRounded
@@ -19,11 +19,11 @@ export function MyPieChart({
     return <ResponsiveContainer width="100%" height="100%" className={className}>
         <PieChart>
             <Pie data={[{
-                name: 'ClassesAttended',
-                value: ClassesAttended
+                name: 'present',
+                value: present
             }, {
                 name: 'Missed',
-                value: ClassesOccured - ClassesAttended
+                value: total - present
             }]} innerRadius={30} outerRadius={50} paddingAngle={0} dataKey="value" startAngle={90} endAngle={-270} labelLine={false} // Hide the default label line
             >
                 <Cell key={`cell-attended`} fill={backgroundColor} /> {

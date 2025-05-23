@@ -48,16 +48,16 @@ export default function InputArea({ onCancel }: InputAreaProps) {
           invalid_type_error: "Required",
           required_error: "Required"
         }).int().min(1).max(99),
-        ClassesAttended: z.coerce.number({
+        present: z.coerce.number({
           invalid_type_error: "Required", 
           required_error: "Required"
         }).int().min(1).max(99),
         MinAttendancePercentage: z.number().int().min(0).max(100),
       }).refine(
-        (data) => data.ClassesAttended <= data.ClassesOccurred,
+        (data) => data.present <= data.ClassesOccurred,
         {
           message: "Cannot exceed classes occurred",
-          path: ["ClassesAttended"]
+          path: ["present"]
         }
       );
     
@@ -182,7 +182,7 @@ export default function InputArea({ onCancel }: InputAreaProps) {
                         
                         <FormField
                             control={form.control}
-                            name="ClassesAttended"
+                            name="present"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Classes Attended: </FormLabel>

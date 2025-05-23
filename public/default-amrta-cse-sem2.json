@@ -1,82 +1,82 @@
 [
   {
-    "Course": "history",
     "Sl_No": "1",
-    "absent": "3",
-    "dutyLeave": "0",
-    "medical": "0",
-    "percentage": "90.63",
-    "present": "29",
-    "total": "32"
+    "Course": "Glimpses of Glorious India",
+    "CourseAbbreviation": "G.G.I",
+    "total": 32,
+    "present": 29,
+    "absent": 3,
+    "percentage": 90.63,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "coding",
     "Sl_No": "2",
-    "absent": "4",
-    "dutyLeave": "0",
-    "medical": "0",
-    "percentage": "77.78",
-    "present": "14",
-    "total": "18"
+    "Course": "Coding Classes",
+    "CourseAbbreviation": "C.C",
+    "total": 18,
+    "present": 14,
+    "absent": 4,
+    "percentage": 77.78,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "Java",
     "Sl_No": "3",
-    "absent": "10",
-    "dutyLeave": "1",
-    "medical": "0",
-    "percentage": "86.11",
-    "present": "61",
-    "total": "72"
+    "Course": "Object Oriented Programming",
+    "CourseAbbreviation": "O.O.P",
+    "total": 72,
+    "present": 62,
+    "absent": 10,
+    "percentage": 86.11,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "UID",
     "Sl_No": "4",
-    "absent": "5",
-    "dutyLeave": "1",
-    "medical": "0",
-    "percentage": "90.38",
-    "present": "46",
-    "total": "52"
+    "Course": "User Interface Design",
+    "CourseAbbreviation": "U.I.D",
+    "total": 52,
+    "present": 47,
+    "absent": 5,
+    "percentage": 90.38,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "mathematics",
     "Sl_No": "5",
-    "absent": "14",
-    "dutyLeave": "1",
-    "medical": "0",
-    "percentage": "79.41",
-    "present": "53",
-    "total": "68"
+    "Course": "Discrete Mathematics",
+    "CourseAbbreviation": "D.M",
+    "total": 68,
+    "present": 54,
+    "absent": 14,
+    "percentage": 79.41,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "algebra",
     "Sl_No": "6",
-    "absent": "13",
-    "dutyLeave": "1",
-    "medical": "0",
-    "percentage": "79.69",
-    "present": "50",
-    "total": "64"
+    "Course": "Linear Algebra",
+    "CourseAbbreviation": "L.A",
+    "total": 64,
+    "present": 51,
+    "absent": 13,
+    "percentage": 79.69,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "mechanical",
     "Sl_No": "7",
-    "absent": "10",
-    "dutyLeave": "0",
-    "medical": "0",
-    "percentage": "75",
-    "present": "30",
-    "total": "40"
+    "Course": "Manufacturing Practice",
+    "CourseAbbreviation": "M.P",
+    "total": 41,
+    "present": 30,
+    "absent": 11,
+    "percentage": 73,
+    "MinAttendancePercentage": 75
   },
   {
-    "Course": "physics",
     "Sl_No": "8",
-    "absent": "8",
-    "dutyLeave": "1",
-    "medical": "0",
-    "percentage": "81.4",
-    "present": "34",
-    "total": "43"
+    "Course": "Modern Physics",
+    "CourseAbbreviation": "M.P",
+    "total": 43,
+    "present": 35,
+    "absent": 8,
+    "percentage": 81.4,
+    "MinAttendancePercentage": 75
   }
 ]
