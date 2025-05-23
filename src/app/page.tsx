@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Title } from './../components/Title';
 import SubjectDisplayArea from './../components/SubjectDisplayArea';
 import { BackgroundGrid } from './../components/BackgroundGrid';
+import Footer from "@/components/Footer";
 import defaultSubjectsData from "@/../public/default-amrta-cse-sem2.json" assert { type: "json" };
 interface SubjectData {
   Course: string;
@@ -78,6 +79,7 @@ export default function Home() {
 
 
   return (
+    <div>
     <div className="min-h-screen">
       {/* <div > */}
       <BackgroundGrid     />
@@ -106,7 +108,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="flex justify-center">
-                  <Button onClick={() => setShowInputArea(true)} className="mt-2">
+                  <Button onClick={() => {/**setShowInputArea(true) */ alert("Undergoing bug fixes\n Thank you for your patience!")}} className="mt-2">
                     Add a Subject
                   </Button>
                 </div>
@@ -131,5 +133,8 @@ export default function Home() {
       {subjectsData.length != 0 ? (
         <><SubjectDisplayArea   subjectsData={subjectsData} updateSubjectAttribute={updateSubjectAttribute}  /></>)
         : (<></>)}
-    </div>)
+    </div>
+      <Footer />
+    </div>
+  );
 }

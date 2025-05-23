@@ -110,7 +110,7 @@ console.log({
 });
     return (
         <div className='w-auto h-auto sm:w-auto'>
-            <Card className=" m-[2px] border-[2px] sm:border-[4px] border-solid sm:m-2 p-0 sm:p-4" style={{ borderColor: `${borderColor}` }}>
+            <Card className=" m-[2px] border-[2px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2" style={{ borderColor: `${borderColor}` }}>
                 {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                 <div className="pb-0 pt-1 pl-2 pr-2 rounded">
                     <div className='flex justify-between'>

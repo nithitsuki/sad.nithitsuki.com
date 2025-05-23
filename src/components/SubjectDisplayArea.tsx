@@ -23,7 +23,7 @@ interface SubjectDisplayAreaProps {
 
 
 export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribute }: SubjectDisplayAreaProps) {
-    const [abbreviateNames, setAbbreviateNames] = useState(false);
+    const [abbreviateNames, setAbbreviateNames] = useState(true);
     const [sortType, setSortType] = useState<string>("none"); // State for current sort type
 
     const sortedSubjectsData = useMemo(() => {
@@ -77,7 +77,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
 
     return (
         <div className="flex justify-center w-full">
-            <div id="translucent" className="h-full w-full sm:max-w-[90vw] flex flex-wrap justify-center items-center bg-zinc-950/5 rounded-md border backdrop-blur-[0.5px] mt-2">
+            <div id="translucent" className="h-full w-auto sm:max-w-[95vw] flex flex-col justify-center items-center bg-zinc-950/5 rounded-md border backdrop-blur-[0.5px] mt-2">
                 <div id="selectors" className="mt-2 mb-2 flex flex-wrap">
                     <Select onValueChange={setSortType} defaultValue="none">
                         <SelectTrigger className="w-[180px]">
@@ -99,7 +99,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-0  m-0 items-stretch justify-center" id="subject-cards">
+                <div className="flex flex-row flex-wrap w-full justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                     {sortedSubjectsData.map(subject => (
                         <SubjectCard 
                             key={subject.Sl_No}
