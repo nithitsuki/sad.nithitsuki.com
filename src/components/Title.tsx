@@ -6,8 +6,8 @@ interface TitleProps {
 
 export function Title({ title }: TitleProps) {
     return (
-        <div className="flex flex-col items-center">
-            <h1 className="p-0 m-0 mt-2">{title}</h1>
+        <div id="Heading Title" className="flex flex-col z-0 items-center">
+            <h1 className=" p-0 pt-1 z-0 bg-gradient-to-b dark:from-neutral-200 from-gray-700  to-neutral-500 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl text-center">{title}</h1>
         </div>
     );
 }
