@@ -89,23 +89,12 @@ export default function Home() {
         {!showInputArea && (
           <div>
             <p className="text-lg m-0 text-center">
-              {subjectsData.length === 0 ?
+              {subjectsData.length === 0 &&
                 (<>Looks like you haven't added any subjects.
                   <br />You can track attendance manually by clicking  <br className="sm:hidden"></br>"Add a Subject" to add one.
-                </>)
-                : subjectsData.length === 1 ?
-                  (<>You have {subjectsData.length} subject.<br className="sm:hidden"></br> Click on "Add a Subject" to add more.</>)
-                  : (<>You have {subjectsData.length} subjects.<br className="sm:hidden"></br> Click on "Add a Subject" to add more.</>)}
+                </>)}
             </p>
-            {isDemoMode ? (
-              <>
-                <div className="flex justify-center">
-                  <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
-                    Exit Demo Mode
-                  </Button>
-                </div>
-              </>
-            ) : (
+            {!isDemoMode && (
               <>
                 <div className="flex justify-center">
                   <Button onClick={() => {/**setShowInputArea(true) */ alert("Undergoing bug fixes\n Thank you for your patience!")}} className="mt-2">
@@ -131,7 +120,7 @@ export default function Home() {
 
       {showInputArea && <InputArea onCancel={() => setShowInputArea(false)} />}
       {subjectsData.length != 0 ? (
-        <><SubjectDisplayArea   subjectsData={subjectsData} updateSubjectAttribute={updateSubjectAttribute}  /></>)
+        <><SubjectDisplayArea  setIsDemoMode={setIsDemoMode} isDemoMode={isDemoMode} subjectsData={subjectsData} updateSubjectAttribute={updateSubjectAttribute}  /></>)
         : (<></>)}
     </div>
       <Footer />

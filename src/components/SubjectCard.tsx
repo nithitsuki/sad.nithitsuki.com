@@ -10,6 +10,7 @@ interface SubjectCardProps {
     present: number;         // Classes attended
     absent: number;          // Classes skipped
     // percentage: number;      // Attendance percentage
+    isDemoMode: boolean; // Flag to indicate if the card is in demo mode
     MinAttendancePercentage: number;
     No_ClassesPerWeek: number; // Number of classes per week
     UpdateStorageFunction: (Course: string, attribute: string, newValue: number) => void;
@@ -41,7 +42,7 @@ const deleteSubject = (Course: string) => {
     }
 };
 
-export default function SubjectCard({ Course, No_ClassesPerWeek, total, absent, present, MinAttendancePercentage, UpdateStorageFunction }: SubjectCardProps) {
+export default function SubjectCard({ Course, No_ClassesPerWeek, isDemoMode, total, absent, present, MinAttendancePercentage, UpdateStorageFunction }: SubjectCardProps) {
     let [localTotal, setLocalTotal] = React.useState(total);
     let [localPresent, setLocalPresent] = React.useState(present);
     let [localAbsent, setLocalAbsent] = React.useState(absent);
@@ -134,6 +135,7 @@ console.log({
                                 <input
                                     type="number"
                                     value={localPresent}
+                                    disabled={isDemoMode}
                                     className="w-16 inline-block bg-background border rounded px-2 py-1"
                                     onChange={(e) => {
                                         const newPresent = parseInt(e.target.value) || 0;
@@ -150,6 +152,7 @@ console.log({
                                 <input
                                     type="number"
                                     value={localAbsent}
+                                    disabled={isDemoMode}
                                     className="w-16 inline-block bg-background border rounded px-2 py-1"
                                     onChange={(e) => {
                                         const newAbsent = parseInt(e.target.value) || 0;
@@ -178,7 +181,7 @@ console.log({
                                     <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
                                         <p className="text-sm text-muted-foreground">Skippable Classes:</p>
                                         <svg viewBox="0 0 90 90"> {/* Example dimensions */}
-                                            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="90" fontWeight="regular" fill={`${borderColor}`}>
+                                            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="90" fontWeight="regular" fill={"#CCCCCC"}>
                                                 {`${SkippableClasses}`}
                                             </text>
                                         </svg>

@@ -2,6 +2,7 @@
 
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SubjectCard from "@/components/SubjectCard"; // Assuming SubjectCard is in this path
 import React, { useState, useMemo } from "react";
@@ -18,11 +19,13 @@ interface SubjectData {
 
 interface SubjectDisplayAreaProps {
     subjectsData: SubjectData[];
+    isDemoMode: boolean; // Added to match the original code
+    setIsDemoMode: (value: boolean) => void; // Added to match the original code
     updateSubjectAttribute: (Course: string, attribute: string, newValue: number) => void;
 }
 
 
-export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribute }: SubjectDisplayAreaProps) {
+export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribute, setIsDemoMode, isDemoMode }: SubjectDisplayAreaProps) {
     const [abbreviateNames, setAbbreviateNames] = useState(true);
     const [sortType, setSortType] = useState<string>("none"); // State for current sort type
 
@@ -78,6 +81,9 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
     return (
         <div className="flex justify-center w-full">
             <div id="translucent" className="h-full w-auto sm:max-w-[95vw] flex flex-col justify-center items-center bg-zinc-950/5 rounded-md border backdrop-blur-[0.5px] mt-2">
+<div id="main-row" className="flex flex-row w-full justify-between items-center p-4">
+
+                
                 <div id="selectors" className="mt-2 mb-2 flex flex-wrap">
                     <Select onValueChange={setSortType} defaultValue="none">
                         <SelectTrigger className="w-[180px]">
@@ -99,6 +105,13 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
+                                    <div className="flex justify-center">
+                  <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
+                    Exit Demo Mode
+                  </Button>
+                </div>
+</div>
+
                 <div className="flex flex-row flex-wrap w-full justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                     {sortedSubjectsData.map(subject => (
                         <SubjectCard 
@@ -108,6 +121,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                             present={subject.present}
                             absent={subject.absent}
                             total={subject.total}
+                            isDemoMode={isDemoMode}
                             MinAttendancePercentage={subject.MinAttendancePercentage}
                             No_ClassesPerWeek={(subject as any).No_ClassesPerWeek || 4}
                             UpdateStorageFunction={updateSubjectAttribute}
