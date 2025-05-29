@@ -28,32 +28,6 @@ interface SubjectCardProps {
     UpdateStorageFunction: (Course: string, attribute: string, newValue: number) => void;
 }
 
-const deleteSubject = (Course: string) => {
-    try {
-        const storedSubjects = localStorage.getItem('subjectsData');
-        if (storedSubjects) {
-            let subjects: SubjectCardProps[] = JSON.parse(storedSubjects);
-            // Find the index of the subject to remove
-            const indexToRemove = subjects.findIndex(subject => subject.Course === Course);
-
-            // If the subject is found (index is not -1), remove it
-            if (indexToRemove > -1) {
-                subjects.splice(indexToRemove, 1); // Removes 1 element at indexToRemove
-                // Save the updated array back to localStorage
-                localStorage.setItem('subjectsData', JSON.stringify(subjects));
-            }
-        }
-        // NOTE: This only removes the item from localStorage.
-        // You'll likely need additional logic (e.g., updating state in a parent component)
-        // to remove the card from the UI.
-        console.log(`Subject "${Course}" removed from localStorage.`);
-        // Force a re-render if necessary, e.g., by updating parent state
-        window.dispatchEvent(new Event('storage')); // Basic way to notify other parts of the app
-    } catch (error) {
-        console.error(`Error removing subject "${Course}" from localStorage:`, error);
-    }
-};
-
 export default function SubjectCard({ Course, No_ClassesPerWeek, isDemoMode, total, absent, present, MinAttendancePercentage, UpdateStorageFunction }: SubjectCardProps) {
     let [localTotal, setLocalTotal] = React.useState(total);
     let [localPresent, setLocalPresent] = React.useState(present);
@@ -110,17 +84,17 @@ export default function SubjectCard({ Course, No_ClassesPerWeek, isDemoMode, tot
         [AttendancePercentageRounded, MinAttendancePercentage]
     );
 
-console.log({
-  label: 'Attendance Check',
-  current: `${AttendancePercentageRounded}%`,
-  required: `${MinAttendancePercentage}%`,
-  isBelowThreshold: AttendancePercentageRounded < MinAttendancePercentage,
-  difference: `${(AttendancePercentageRounded - MinAttendancePercentage).toFixed(2)}%`,
-  types: {
-    current: typeof AttendancePercentageRounded,
-    required: typeof MinAttendancePercentage
-  }
-});
+// console.log({
+//   label: 'Attendance Check',
+//   current: `${AttendancePercentageRounded}%`,
+//   required: `${MinAttendancePercentage}%`,
+//   isBelowThreshold: AttendancePercentageRounded < MinAttendancePercentage,
+//   difference: `${(AttendancePercentageRounded - MinAttendancePercentage).toFixed(2)}%`,
+//   types: {
+//     current: typeof AttendancePercentageRounded,
+//     required: typeof MinAttendancePercentage
+//   }
+// });
     return (
         <div className='w-auto h-auto sm:w-auto'>
             <Card className=" m-[2px] border-[2px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2" style={{ borderColor: `${borderColor}` }}>

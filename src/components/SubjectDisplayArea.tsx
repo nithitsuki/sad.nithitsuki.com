@@ -106,9 +106,9 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
-                  <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
+                {isDemoMode &&  (                  <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
                     Exit Demo Mode
-                  </Button>
+                  </Button>)}
 
                 <div className="flex justify-center">
                   <Button onClick={() => alert("To be implemented!")} className=" bg-teal-500 mt-0 mb-4 sm:mb-0">

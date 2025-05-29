@@ -85,7 +85,7 @@ export default function Home() {
       <BackgroundGrid     />
       <Title title="Attendance Dashboard" />
 
-      <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center sm:mt-5">
+      <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center mt-01">
         {!showInputArea && (
           <div>
             <p className="text-lg m-0 text-center">
@@ -96,7 +96,7 @@ export default function Home() {
             </p>
             {!isDemoMode && (
               <>
-                <div className="flex justify-center">
+                <div id="add-button" className="flex justify-center">
                   <Button onClick={() => {/**setShowInputArea(true) */ alert("Undergoing bug fixes\n Thank you for your patience!")}} className="mt-2">
                     Add a Subject
                   </Button>
