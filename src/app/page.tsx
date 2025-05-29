@@ -85,7 +85,7 @@ export default function Home() {
       <BackgroundGrid     />
       <Title title="Attendance Dashboard" />
 
-      <div className="flex flex-wrap gap-4 items-start justify-center mt-5">
+      <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center sm:mt-5">
         {!showInputArea && (
           <div>
             <p className="text-lg m-0 text-center">

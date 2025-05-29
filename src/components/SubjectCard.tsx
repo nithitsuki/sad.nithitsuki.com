@@ -1,7 +1,19 @@
 import React from 'react';
 import { Card, CardTitle } from './ui/card';
 import { MyPieChart } from './MyPieChart';
-import { set } from 'react-hook-form';
+
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 interface SubjectCardProps {
     Sl_No: string;            // Serial number
@@ -117,7 +129,6 @@ console.log({
                     <div className='flex justify-between'>
                         <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px]'>{Course}<span className='hidden sm:inline'> - [{localTotal}]</span>
                             <span className='sm:hidden font-light text-xs sm:text-base'><br className='sm:hidden'></br>[{localPresent} out of {localTotal}]</span></CardTitle>
-                        <a onClick={() => alert("Editing Functionality not yet supported")} className="cursor-pointer hidden sm:inline">✎</a>
                     </div>
                     <hr></hr>
                     <div className="sm:hidden w-full bg-gray-200 rounded dark:bg-gray-700">
@@ -207,11 +218,43 @@ console.log({
                         <hr></hr>
                         {/* </div> */}
                     </div>
-                    <p className="text-red-500 text-center cursor-pointer hidden sm:block" onClick={() => deleteSubject(Course)}>Delete Subject</p>
-                    <p className="text-blue-500 text-center cursor-pointer sm:hidden" onClick={() => alert("Editing Functionality not yet supported")}>Edit</p>
-
-                </div>
-            </Card>
-        </div>
-    )
+                    <div className="flex justify-center items-center gap-2">
+                        <p className="dark:text-green-400 text-center cursor-pointer" onClick={() => alert("Info!")}>Info</p>
+                        <p>|</p>
+                        <p className="dark:text-cyan-400 text-center cursor-pointer" onClick={() => alert("Edit!")}>Edit</p>
+                    </div>
+                    {/* <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">Edit Profile</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                        <DialogTitle>Edit profile</DialogTitle>
+                        <DialogDescription>
+                            Make changes to your profile here. Click save when you're done.
+                        </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="name" className="text-right">
+                            Name
+                            </Label>
+                            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="username" className="text-right">
+                            Username
+                            </Label>
+                            <Input id="username" value="@peduarte" className="col-span-3" />
+                        </div>
+                        </div>
+                        <DialogFooter>
+                        <Button type="submit">Save changes</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                    </Dialog> */}
+                            </div>
+                        </Card>
+                    </div>
+                )
 }

@@ -79,9 +79,10 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
     }, [subjectsData, sortType]);
 
     return (
-        <div className="flex justify-center w-full">
+        <div className="flex flex-col items-center justify-center w-full">
+
             <div id="translucent" className="h-full w-auto sm:max-w-[95vw] flex flex-col justify-center items-center bg-zinc-950/5 rounded-md border backdrop-blur-[0.5px] mt-2">
-<div id="main-row" className="flex flex-row w-full justify-between items-center p-4">
+                <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0">
 
                 
                 <div id="selectors" className="mt-2 mb-2 flex flex-wrap">
@@ -105,14 +106,18 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
-                                    <div className="flex justify-center">
                   <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
                     Exit Demo Mode
+                  </Button>
+
+                <div className="flex justify-center">
+                  <Button onClick={() => alert("To be implemented!")} className=" bg-teal-500 mt-0 mb-4 sm:mb-0">
+                    View Timetable
                   </Button>
                 </div>
 </div>
 
-                <div className="flex flex-row flex-wrap w-full justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
+                <div className="flex flex-row flex-wrap w-full justify-center lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                     {sortedSubjectsData.map(subject => (
                         <SubjectCard 
                             key={subject.Sl_No}
@@ -129,6 +134,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     ))}
                 </div>
             </div>
+            
         </div>
     );
 }

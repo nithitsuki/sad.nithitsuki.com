@@ -1,72 +1,35 @@
-# Student Attendance Dashboard (S.A.D)
+# Student Attendance Dashboard
 
-A website designed to help students track their attendance and maintain their desired attendance percentage.
+An informative and user-friendly dashboard designed to help students view their attendance and maintain their desired attendance percentage.
 
-![Attendance Dashboard](https://github.com/nithitsuki/class-skipulator/blob/main/public/Screenshot-1.0.png)
+![Attendance Dashboard](public/imgs/2IN1.png)
 
-## 🎯 Overview
-
-Student Attendance Dashboard (S.A.D) is an intuitive attendance tracking tool that helps students:
+## 🎯 Overview & Features ✨
 
 - Monitor their class attendance across multiple subjects
 - Calculate how many more classes they can afford to miss while maintaining their required attendance percentage
-- Visualize their attendance data with informative charts
-- Make informed decisions about attending or skipping future classes
-
-## ✨ Features
-
-- **Subject Management**: Add, view, and delete subjects
-- **Attendance Tracking**: Track classes occurred vs. classes attended
-- **Visual Indicators**: Color-coded cards show attendance status at a glance
-- **Skip Calculator**: Automatically calculates how many more classes you can skip
-- **Data Persistence**: Stores your data in the browser's local storage
-- **Responsive Design**: Works on desktop and mobile devices
-
-## 📝 How to Use
-
-1. **Go to an instance of S.A.D**: Visit the deployed application (e.g., `sad.nithitsuki.com`).
-
-2. **Add a Subject**: Click the "Add a Subject" button and fill in the required information:
-    - Subject Name
-    - Classes per Week
-    - Classes Occurred
-    - Classes Attended
-
-3. **View Attendance**: Each subject card displays:
-    - Attendance percentage in a donut chart
-    - Classes occurred and attended
-    - Number of skipped classes
-    - Number of classes you can still skip
-
-4. **Update a Subjects attendance**: Coming Soon™
-
-5. **Delete a Subject**: Click "Delete Subject" at the bottom of any subject card
-
-## 💻 Tech Stack
-
-- **Framework**: [Next.js 15](https://nextjs.org/)
-- **UI/Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Form Handling**: [React Hook Form](https://react-hook-form.com/) with [Zod](https://zod.dev/) validation
-- **Data Visualization**: [Recharts](https://recharts.org/)
-- **State Management**: [React Hooks](https://react.dev/reference/react) (useState, useEffect)
-- **Data Persistence**: [Browser LocalStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- Visualize attendance data through comprehensive charts and graphs
+- Access detailed statistics including attendance trends, skip patterns, and semester projections
+- View all attendance data centralized in one dashboard for easy monitoring
+- Make data-driven decisions about class attendance based on calculated insights
 
 ## 🚀 Upcoming Features (Help Welcomed!)
 
 I'm also looking to improve Student Attendance Dashboard (S.A.D). Here are some ideas for future enhancements (contributions are welcome!):
 
-The following features are listed in order of priority (highest to lowest):
+The following features are planned, ordered by priority:
 
+- **Implement Core Subject Card Functionality**:
+  - [ ] **View Timetable Button**: Implement a modal to display the weekly class schedule for all subjects. Include an option for users to upload their timetable if not already available.
+  - [ ] **Info Button**: Develop a feature to show detailed statistics, including classes per week, remaining classes in the semester, attendance history, and projected skip allowances with percentage changes after each skip.
+  - [ ] **Edit Functionality**: Enable inline editing of attendance data (e.g., classes occurred, attended, skipped) directly on the subject card. Allow users to adjust the minimum required attendance percentage for each subject.
 
-- [ ] **Auto Fetch attendance from supported sources**: Automatically sync attendance data from university portals, eliminating manual entry.
-- [ ] **Mobile Version using Capacitor.js**: Develop a native mobile application for iOS and Android for a seamless experience on the go.
-- [ ] **Microsoft oAuth Login**: Implement OAuth to allow users to sign in and synchronize their attendance data across multiple devices.
-- [ ] **Edit Subject Data**: Allow modification of subject name or classes per week after initial creation.
-- [ ] **Improved UI/UX**: Enhance the application's visual design and usability.
-- [ ] **Customizable Requirements**: Set different attendance percentage requirements per subject.
-- [ ] **Data Export/Import**: Allow users to back up and restore their data.
-- [ ] **Notifications**: Reminders for upcoming classes or low attendance warnings.
-- [ ] **Semester/Term Management**: Group subjects by academic terms.
+- [ ] **UI/UX Enhancements**: Improve the application's overall visual design and user experience.
+
+- **Lower Priority plans**
+  - [ ] **Data Export/Import**: Allow users to back up their data and restore it when needed.
+  - [ ] **Notes Section**: Allow users to add and manage small notes related to each subject.
+  - [ ] **Semester/Term Management**: Introduce functionality to group subjects by academic terms or semesters.
 
 ## 🤝 Contributing
 
