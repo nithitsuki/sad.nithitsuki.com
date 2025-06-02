@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SubjectCard from "@/components/SubjectCard"; // Assuming SubjectCard is in this path
 import React, { useState, useMemo } from "react";
+import {Dialog,  DialogContent,  DialogDescription,  DialogHeader,  DialogTitle,  DialogTrigger,} from "@/components/ui/dialog"
 
 interface SubjectData {
     Course: string;
@@ -79,6 +80,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
     }, [subjectsData, sortType]);
 
     return (
+        
         <div className="flex flex-col items-center justify-center w-full">
 
             <div id="translucent" className="h-full w-auto sm:max-w-[95vw] flex flex-col justify-center items-center bg-zinc-950/5 rounded-md border backdrop-blur-[0.5px] mt-2">
@@ -106,16 +108,28 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
-                {isDemoMode &&  (                  <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
+                {isDemoMode &&  (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
                     Exit Demo Mode
                   </Button>)}
 
-                <div className="flex justify-center">
-                  <Button onClick={() => alert("To be implemented!")} className=" bg-teal-500 mt-0 mb-4 sm:mb-0">
-                    View Timetable
-                  </Button>
+                    <div className="mt-2 mb-2 flex flex-wrap justify-center">
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button className=" bg-teal-500 m-0 sm:mb-0">
+                                    View Timetable
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>View Timetable</DialogTitle>
+                                    <DialogDescription>
+                                        You'll be able to upload your timetable here in the future. soon™
+                                    </DialogDescription>
+                            </DialogHeader>
+                        </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
-</div>
 
                 <div className="flex flex-row flex-wrap w-full justify-center lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                     {sortedSubjectsData.map(subject => (

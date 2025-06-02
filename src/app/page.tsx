@@ -2,7 +2,7 @@
 import { useState, useEffect, use } from "react";
 // Custom Shadcn UI components
 import InputArea from "@/components/InputArea";
-import SubjectCard from "@/components/SubjectCard";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -97,9 +97,19 @@ export default function Home() {
             {!isDemoMode && (
               <>
                 <div id="add-button" className="flex justify-center">
-                  <Button onClick={() => {/**setShowInputArea(true) */ alert("Undergoing bug fixes\n Thank you for your patience!")}} className="mt-2">
-                    Add a Subject
-                  </Button>
+                                          <Dialog>
+                                            <DialogTrigger asChild>
+                                              <Button className="mt-2">Add a Subject</Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                              <DialogHeader>
+                                                <DialogTitle>Undergoing Bug Fixes</DialogTitle>
+                                                <DialogDescription>
+                                                  This core feature will be implemented soon™
+                                                </DialogDescription>
+                                              </DialogHeader>
+                                            </DialogContent>
+                                          </Dialog>
                 </div>
               </>
             )}
