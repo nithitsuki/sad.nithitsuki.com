@@ -9,13 +9,17 @@ import React, { useState, useMemo } from "react";
 import {Dialog,  DialogContent,  DialogDescription,  DialogHeader,  DialogTitle,  DialogTrigger,} from "@/components/ui/dialog"
 
 interface SubjectData {
-    Course: string;
-    Sl_No: string;
-    CourseAbbreviation: string;
-    total: number;
-    present: number;
-    absent: number;
-    MinAttendancePercentage: number;
+  Sl_No: string;
+  Course: string;
+  CourseAbbreviation: string;
+  total: number;
+  present: number;
+  absent: number;
+  percentage: number;
+  MinAttendancePercentage: number;
+  daysOfWeek?: string[];
+  Notes?: string;
+  end_date?: string;
 }
 
 interface SubjectDisplayAreaProps {
@@ -108,9 +112,9 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
-                {isDemoMode &&  (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
+                {/* {isDemoMode &&  (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
                     Exit Demo Mode
-                  </Button>)}
+                  </Button>)} */}
 
                     <div className="mt-2 mb-2 flex flex-wrap justify-center">
                         <Dialog>
@@ -136,14 +140,17 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                         <SubjectCard 
                             key={subject.Sl_No}
                             Sl_No={subject.Sl_No}
-                            Course={abbreviateNames ? subject.CourseAbbreviation : subject.Course}
+                            Course={subject.Course}
+                            CourseAbbreviated={subject.CourseAbbreviation}
+                            isAbbreviated={abbreviateNames}
                             present={subject.present}
                             absent={subject.absent}
                             total={subject.total}
                             isDemoMode={isDemoMode}
                             MinAttendancePercentage={subject.MinAttendancePercentage}
-                            No_ClassesPerWeek={(subject as any).No_ClassesPerWeek || 4}
                             UpdateStorageFunction={updateSubjectAttribute}
+                            Notes={subject.Notes || ""}
+                            daysOfWeek={subject.daysOfWeek || []}
                         />
                     ))}
                 </div>

@@ -6,21 +6,29 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import InfoPopup from './popups/InfoPopup';
+import EditPopup from './popups/EditPopup';
 
 interface SubjectCardProps {
     Sl_No: string;            // Serial number
     Course: string;           // Course name
+    CourseAbbreviated: string;           // Course name+
+    isAbbreviated: boolean; // Flag to indicate if the course name is abbreviated
     total: number;           // localTotal classes occurred
     present: number;         // Classes attended
     absent: number;          // Classes skipped
     // percentage: number;      // Attendance percentage
     isDemoMode: boolean; // Flag to indicate if the card is in demo mode
     MinAttendancePercentage: number;
-    No_ClassesPerWeek: number; // Number of classes per week
+    daysOfWeek: string[]; // Array of days of the week the course is held
+    Notes: string;
     UpdateStorageFunction: (Course: string, attribute: string, newValue: number) => void;
 }
 
-export default function SubjectCard({ Course, No_ClassesPerWeek, isDemoMode, total, absent, present, MinAttendancePercentage, UpdateStorageFunction }: SubjectCardProps) {
+
+
+
+export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbreviated, daysOfWeek, isDemoMode, total, absent, present, MinAttendancePercentage, UpdateStorageFunction, Notes }: SubjectCardProps) {
     let [localTotal, setLocalTotal] = React.useState(total);
     let [localPresent, setLocalPresent] = React.useState(present);
     let [localAbsent, setLocalAbsent] = React.useState(absent);
@@ -89,11 +97,11 @@ export default function SubjectCard({ Course, No_ClassesPerWeek, isDemoMode, tot
     // });
     return (
         <div className='w-auto h-auto sm:w-auto'>
-            <Card className=" m-[2px] border-[2px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2" style={{ borderColor: `${borderColor}` }}>
+            <Card className=" m-[2px] border-[0.1px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2" style={{ borderColor: `${borderColor}` }}>
                 {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                 <div className="pb-0 pt-1 pl-2 pr-2 rounded">
                     <div className='flex justify-between'>
-                        <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px]'>{Course}<span className='hidden sm:inline'> - [{localTotal}]</span>
+                        <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px]'>{isAbbreviated ? CourseAbbreviated : Course}<span className='hidden sm:inline'> - [{localTotal}]</span>
                             <span className='sm:hidden font-light text-xs sm:text-base'><br className='sm:hidden'></br>[{localPresent} out of {localTotal}]</span></CardTitle>
                     </div>
                     <hr></hr>
@@ -185,33 +193,9 @@ export default function SubjectCard({ Course, No_ClassesPerWeek, isDemoMode, tot
                         {/* </div> */}
                     </div>
                     <div className="flex justify-center items-center gap-2">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <p className="dark:text-green-400 text-center cursor-pointer">Info</p>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>View Info</DialogTitle>
-                                    <DialogDescription>
-                                        You'll be able to view more subject info here in the future. soon™
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
+                        <InfoPopup Course={Course} MinAttendancePercentage={MinAttendancePercentage} localTotal={localTotal} localPresent={localPresent} localAbsent={localAbsent} SkippableClasses={SkippableClasses} AttendancePercentageRounded={AttendancePercentageRounded} borderColor={borderColor} Notes={Notes} daysOfWeek={daysOfWeek}></InfoPopup>
                         <p>|</p>
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                 <p className="dark:text-cyan-400 text-center cursor-pointer">Edit</p>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Edit Info</DialogTitle>
-                                    <DialogDescription>
-                                        You'll be able to edit subject info here in the future. soon™
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
+                        <EditPopup Sl_No={Sl_No} CourseAbbreviation={CourseAbbreviated} Course={Course} MinAttendancePercentage={MinAttendancePercentage} localTotal={localTotal} localPresent={localPresent} localAbsent={localAbsent} SkippableClasses={SkippableClasses} AttendancePercentageRounded={AttendancePercentageRounded} borderColor={borderColor}></EditPopup>
                     </div>
                 </div>
             </Card>

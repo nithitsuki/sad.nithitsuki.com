@@ -14,13 +14,17 @@ import { BackgroundGrid } from './../components/BackgroundGrid';
 import Footer from "@/components/Footer";
 import defaultSubjectsData from "@/../public/default-amrta-cse-sem2.json" assert { type: "json" };
 interface SubjectData {
-  Course: string;
   Sl_No: string;
+  Course: string;
   CourseAbbreviation: string;
   total: number;
   present: number;
   absent: number;
+  percentage: number;
   MinAttendancePercentage: number;
+  daysOfWeek?: string[];
+  Notes?: string;
+  end_date?: string;
 }
 
 export default function Home() {
