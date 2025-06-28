@@ -19,21 +19,18 @@ I'm also looking to improve Student Attendance Dashboard (S.A.D). Here are some 
 
 The following features are planned, ordered by priority:
 
-- **Implement Core Subject Card Functionality**:
-  - [ ] **View Timetable Button**: Implement a modal to display the weekly class schedule for all subjects. Include an option for users to upload their timetable if not already available.
-  - [ ] **Info Button**: Develop a feature to show detailed statistics, including classes per week, remaining classes in the semester, attendance history, and projected skip allowances with percentage changes after each skip.
-  - [ ] **Edit Functionality**: Enable inline editing of attendance data (e.g., classes occurred, attended, skipped) directly on the subject card. Allow users to adjust the minimum required attendance percentage for each subject.
-
-- [ ] **UI/UX Enhancements**: Improve the application's overall visual design and user experience.
+- **Implement Core Functionality**:
+  - [ ] **PWA Support**: I need an icon design (oT-T)尸 
+  - [ ] **View Timetable Button**: check out [this issue](https://github.com/nithitsuki/sad.nithitsuki.com/issues/1)
+  - [ ] **UI/UX Enhancements**: I'm a programmer, but no designer (╥_╥)
 
 - **Lower Priority plans**
   - [ ] **Data Export/Import**: Allow users to back up their data and restore it when needed.
-  - [ ] **Notes Section**: Allow users to add and manage small notes related to each subject.
   - [ ] **Semester/Term Management**: Introduce functionality to group subjects by academic terms or semesters.
 
 ## 🤝 Contributing
-
-For more info on contributing, running locally, contribution guidelines and technical info, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Open an Issue before working on a PR please\
+use [origin UI](https://originui.com) components for UI
 
 ## 📜 License
 
