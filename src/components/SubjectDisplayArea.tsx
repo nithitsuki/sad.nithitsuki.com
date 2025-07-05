@@ -87,13 +87,11 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
         
         <div className="flex flex-col items-center justify-center w-full">
 
-            <div id="translucent" className="h-full w-auto sm:max-w-[95vw] flex flex-col justify-center items-center bg-zinc-950/5 rounded-md border backdrop-blur-[0.5px] mt-2">
+            <div id="translucent" className="h-full w-min sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-2">
                 <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0">
 
-                
-                <div id="selectors" className="mt-2 mb-2 flex flex-wrap">
                     <Select onValueChange={setSortType} defaultValue="none">
-                        <SelectTrigger className="w-[180px]">
+                        <SelectTrigger className="w-[140px] sm:w-auto">
                             <SelectValue placeholder="Sort By" />
                         </SelectTrigger>
                         <SelectContent>
@@ -107,10 +105,9 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </Select>
 
                     <div className="flex items-center space-x-2 mx-4 mt-0 mb-0">
-                        <Label htmlFor="abbr">Abbreviate</Label>
+                        <Label htmlFor="abbr">Abbr:</Label>
                         <Switch id="abbr" checked={abbreviateNames} onCheckedChange={setAbbreviateNames} />
                     </div>
-                </div>
 
                 {/* {isDemoMode &&  (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
                     Exit Demo Mode
@@ -119,7 +116,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     <div className="mt-2 mb-2 flex flex-wrap justify-center">
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button className=" bg-teal-500 m-0 sm:mb-0">
+                                <Button className=" m-0 sm:mb-0">
                                     View Timetable
                                 </Button>
                             </DialogTrigger>
