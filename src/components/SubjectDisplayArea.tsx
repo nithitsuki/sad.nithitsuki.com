@@ -87,7 +87,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
         
         <div className="flex flex-col items-center justify-center w-full">
 
-            <div id="translucent" className="h-full w-min sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-2">
+            <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-2">
                 <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0">
 
                     <Select onValueChange={setSortType} defaultValue="none">
@@ -105,7 +105,8 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </Select>
 
                     <div className="flex items-center space-x-2 mx-4 mt-0 mb-0">
-                        <Label htmlFor="abbr">Abbr:</Label>
+                        <Label htmlFor="abbr " className="sm:hidden">Abbr:</Label>
+                        <Label htmlFor="abbr" className="hidden sm:inline">Abbreviate:</Label>
                         <Switch id="abbr" checked={abbreviateNames} onCheckedChange={setAbbreviateNames} />
                     </div>
 
@@ -132,7 +133,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     </div>
                 </div>
 
-                <div className="flex flex-row flex-wrap w-full justify-center lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
+                <div className="flex flex-row flex-wrap w-full justify-evenly lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                     {sortedSubjectsData.map(subject => (
                         <SubjectCard 
                             key={subject.Sl_No}

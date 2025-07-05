@@ -97,11 +97,11 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
     // });
     return (
         <div className='w-auto h-auto sm:w-auto'>
-            <Card className=" m-[2px] border-[0.1px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2 backdrop-blur-[1.5px]" style={{ borderColor: `${borderColor}` }}>
+            <Card className=" m-[2px] mb-4 border-[0.1px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2 backdrop-blur-[1.5px]" style={{ borderColor: `${borderColor}` }}>
                 {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                 <div className="pb-0 pt-1 pl-2 pr-2 rounded">
-                    <div className='flex justify-between'>
-                        <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px]'>{isAbbreviated ? CourseAbbreviated : Course}<span className='hidden sm:inline'> - [{localTotal}]</span>
+                    <div className='flex justify-center'>
+                        <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px] text-center'>{isAbbreviated ? CourseAbbreviated : Course}<span className='hidden sm:inline'> - [{localTotal}]</span>
                             <span className='sm:hidden font-light text-xs sm:text-base'><br className='sm:hidden'></br>[{localPresent} out of {localTotal}]</span></CardTitle>
                     </div>
                     {/* <hr></hr> */}
@@ -164,7 +164,7 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
 
                                 {AttendancePercentageRounded >= MinAttendancePercentage ? (
                                     <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
-                                        <p className="text-sm text-foreground">Skippable:</p>
+                                        <p className="text-sm text-foreground text-center">Skippable</p>
                                         <svg viewBox="0 0 100 100" className='w-24 h-22'> 
                                             <text x={SkippableClasses > 9 ? "40%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill={"var(--foreground)"} letterSpacing={SkippableClasses > 9 ? "-13" : "0"}>
                                                 {`${SkippableClasses}`}
@@ -172,7 +172,7 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                         </svg>
                                     </div>) : (
                                     <div id='Need2pass' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
-                                        <p className="text-bold text-regular text-red-500">Needed:</p>
+                                        <p className="text-bold text-regular text-red-400 text-center">Needed</p>
                                         <svg viewBox="0 0 100 100" className='w-22 h-22'>
                                             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill="url(#redToOrangeGradient)">
                                                 {`${Math.ceil((MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - MinAttendancePercentage))}!!`}
