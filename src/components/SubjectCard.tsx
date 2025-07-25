@@ -42,7 +42,10 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
         Math.floor((localPresent * (100 - MinAttendancePercentage) / MinAttendancePercentage) - localAbsent),
         [localPresent, MinAttendancePercentage, localAbsent]
     );
-
+    const ClassesNeeded = React.useMemo(() =>
+        Math.ceil((MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - MinAttendancePercentage)),
+        [localPresent, localTotal, MinAttendancePercentage]
+    );
     const AttendancePercentageRounded = React.useMemo(() =>
         Math.floor(+Attendance),
         [Attendance]
@@ -174,8 +177,8 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                     <div id='Need2pass' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
                                         <p className="text-bold text-regular text-red-400 text-center">Needed</p>
                                         <svg viewBox="0 0 100 100" className='w-22 h-22'>
-                                            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill="url(#redToOrangeGradient)">
-                                                {`${Math.ceil((MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - MinAttendancePercentage))}!!`}
+                                            <text x={ClassesNeeded > 9 ? "60%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize={ClassesNeeded > 9 ? "80" : "100"} fontWeight="regular" fill="url(#redToOrangeGradient)">
+                                                {`${ClassesNeeded}!!`}
                                             </text>
                                             <defs>
                                                 <linearGradient id="redToOrangeGradient" x1="20%" y1="20%" x2="100%" y2="100%">
