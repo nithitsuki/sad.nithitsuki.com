@@ -27,7 +27,6 @@ interface SubjectCardProps {
 
 
 
-
 export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbreviated, daysOfWeek, isDemoMode, total, absent, present, MinAttendancePercentage, UpdateStorageFunction, Notes }: SubjectCardProps) {
     let [localTotal, setLocalTotal] = React.useState(total);
     let [localPresent, setLocalPresent] = React.useState(present);
@@ -51,34 +50,33 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
         [Attendance]
     );
 
+    // Uses OKLCH for perceptually uniform color transitions
     const calculateColor = (percentage: number, minPercentage: number): string => {
         if (percentage >= 90) {
-            // Transition from deep green to less saturated green (100% -> 90%)
-            const ratio = (percentage - 90) / 10;
-            const red = Math.round(50 * (1 - ratio));
-            const green = Math.round(160 + (70 * ratio));
-            const blue = Math.round(50 * (1 - ratio));
-            return `rgb(${red}, ${green}, ${blue})`;
+            // Dark green to lighter green
+            const lightness = 0.5 + 0.2 * ((percentage - 90) / 10); // 0.5 to 0.7
+            return `oklch(${lightness} 0.18 140)`;
         } else if (percentage >= 80) {
-            // Smoother transition from less saturated green to unsaturated orange (90% -> 80%)
+            // Green to orange
             const ratio = (percentage - 80) / 10;
-            // Starting with a less saturated green at 90% (around rgb(50, 160, 50))
-            // Moving to an unsaturated orange at 80% (rgb(255, 119, 0))
-            const red = Math.round(50 + (205 * (1 - ratio)));
-            const green = Math.round(160 - (41 * (1 - ratio)));
-            const blue = Math.round(50 - (50 * (1 - ratio)));
-            return `rgb(${red}, ${green}, ${blue})`;
+            const lightness = 0.6 - 0.1 * (1 - ratio); // 0.5 to 0.6
+            const chroma = 0.18 + 0.07 * (1 - ratio); // 0.18 to 0.25
+            const hue = 140 - 85 * (1 - ratio); // 140 (green) to 55 (orange)
+            return `oklch(${lightness} ${chroma} ${hue})`;
         } else if (percentage >= minPercentage) {
-            1
-            // Transition from unsaturated orange to red (80% -> minPercentage)
+            // Orange to red transition starting from minimum percentage
             const ratio = (percentage - minPercentage) / (80 - minPercentage);
-            const red = 255;
-            const green = Math.round(119 * ratio);
-            const blue = 0;
-            return `rgb(${red}, ${green}, ${blue})`;
+            const lightness = 0.55 - 0.05 * (1 - ratio); // 0.5 to 0.55
+            const chroma = 0.25 + 0.05 * (1 - ratio); // 0.25 to 0.3
+            const hue = 55 - 35 * ratio; // 55 (orange) to 20 (red) - fixed ratio direction
+            return `oklch(${lightness} ${chroma} ${hue})`;
         } else {
-            // Below minimum attendance - solid red
-            return '#FF0000';
+            // Deep red - gets darker the lower the percentage
+            const belowMin = Math.max(0, minPercentage - percentage);
+            const darkeningFactor = Math.min(belowMin / 20, 1); // Darken based on how far below minimum
+            const lightness = 0.5 - 0.2 * darkeningFactor; // 0.5 to 0.3
+            const chroma = 0.3 + 0.1 * darkeningFactor; // 0.3 to 0.4 for more saturation
+            return `oklch(${lightness} ${chroma} 20)`;
         }
     };
 
@@ -168,7 +166,7 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                 {AttendancePercentageRounded >= MinAttendancePercentage ? (
                                     <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
                                         <p className="text-sm text-foreground text-center">Skippable</p>
-                                        <svg viewBox="0 0 100 100" className='w-24 h-22'> 
+                                        <svg viewBox="0 0 100 100" className='w-24 h-22'>
                                             <text x={SkippableClasses > 9 ? "40%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill={"var(--foreground)"} letterSpacing={SkippableClasses > 9 ? "-13" : "0"}>
                                                 {`${SkippableClasses}`}
                                             </text>

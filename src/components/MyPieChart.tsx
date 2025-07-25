@@ -29,7 +29,7 @@ export function MyPieChart({
                 <Cell key={`cell-attended`} fill={backgroundColor} /> {
                     /* Green for attended */
                 }
-                <Cell key={`cell-missed`} fill="#EF4444" /> {
+                <Cell key={`cell-missed`} fill="#00000000" /> {
                     /* Red for missed */
                 }
             </Pie>

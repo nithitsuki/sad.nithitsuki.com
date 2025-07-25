@@ -6,20 +6,31 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SubjectCard from "@/components/SubjectCard"; // Assuming SubjectCard is in this path
 import React, { useState, useMemo } from "react";
-import {Dialog,  DialogContent,  DialogDescription,  DialogHeader,  DialogTitle,  DialogTrigger,} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface SubjectData {
-  Sl_No: string;
-  Course: string;
-  CourseAbbreviation: string;
-  total: number;
-  present: number;
-  absent: number;
-  percentage: number;
-  MinAttendancePercentage: number;
-  daysOfWeek?: string[];
-  Notes?: string;
-  end_date?: string;
+    Sl_No: string;
+    Course: string;
+    CourseAbbreviation: string;
+    total: number;
+    present: number;
+    absent: number;
+    percentage: number;
+    MinAttendancePercentage: number;
+    daysOfWeek?: string[];
+    Notes?: string;
+    end_date?: string;
 }
 
 interface SubjectDisplayAreaProps {
@@ -29,6 +40,10 @@ interface SubjectDisplayAreaProps {
     updateSubjectAttribute: (Course: string, attribute: string, newValue: number) => void;
 }
 
+function deleteAllSubjects() {
+    localStorage.removeItem("subjectsData");
+    location.reload(); // Reload the page to reflect changes
+}
 
 export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribute, setIsDemoMode, isDemoMode }: SubjectDisplayAreaProps) {
     const [abbreviateNames, setAbbreviateNames] = useState(true);
@@ -84,7 +99,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
     }, [subjectsData, sortType]);
 
     return (
-        
+
         <div className="flex flex-col items-center justify-center w-full">
 
             <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-2">
@@ -110,9 +125,33 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                         <Switch id="abbr" checked={abbreviateNames} onCheckedChange={setAbbreviateNames} />
                     </div>
 
-                {/* {isDemoMode &&  (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
-                    Exit Demo Mode
-                  </Button>)} */}
+                    {isDemoMode && (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
+                        Exit Demo Mode
+                    </Button>)}
+
+                    {!isDemoMode && (
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0 hover:bg-red-500">
+                                    Clear All Subjects
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your
+                                        current subjects and their attendance data.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction className=" bg-red-400 mt-0 mb-4 sm:mb-0 hover:bg-red-500" onClick={() => deleteAllSubjects()}>Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+
+                    )}
 
                     <div className="mt-2 mb-2 flex flex-wrap justify-center">
                         <Dialog>
@@ -127,15 +166,15 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                                     <DialogDescription>
                                         You'll be able to upload your timetable here in the future. soon™
                                     </DialogDescription>
-                            </DialogHeader>
-                        </DialogContent>
+                                </DialogHeader>
+                            </DialogContent>
                         </Dialog>
                     </div>
                 </div>
 
                 <div className="flex flex-row flex-wrap w-full justify-evenly lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                     {sortedSubjectsData.map(subject => (
-                        <SubjectCard 
+                        <SubjectCard
                             key={subject.Sl_No}
                             Sl_No={subject.Sl_No}
                             Course={subject.Course}
@@ -153,7 +192,7 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                     ))}
                 </div>
             </div>
-            
+
         </div>
     );
 }
