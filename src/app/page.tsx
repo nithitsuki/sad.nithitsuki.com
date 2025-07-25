@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, use } from "react";
+import Link from 'next/link';
 // Custom Shadcn UI components
 import InputArea from "@/components/InputArea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
@@ -84,59 +85,59 @@ export default function Home() {
 
   return (
     <div>
-    <div className="min-h-screen">
-      {/* <div > */}
-      <BackgroundGrid     />
-      <Title title="Attendance Dashboard" />
+      <div className="min-h-screen">
+        {/* <div > */}
+        <BackgroundGrid />
+        <Title title="Attendance Dashboard" />
 
-      <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center mt-01">
-        {!showInputArea && (
-          <div>
-            <p className="text-lg m-0 text-center">
-              {subjectsData.length === 0 &&
-                (<>Looks like you haven't added any subjects.
-                  <br />You can track attendance manually by clicking  <br className="sm:hidden"></br>"Add a Subject" to add one.
-                </>)}
-            </p>
-            {!isDemoMode && (
-              <>
-                <div id="add-button" className="flex justify-center">
-                                          <Dialog>
-                                            <DialogTrigger asChild>
-                                              <Button className="mt-2">Add a Subject</Button>
-                                            </DialogTrigger>
-                                            <DialogContent>
-                                              <DialogHeader>
-                                                <DialogTitle>Undergoing Bug Fixes</DialogTitle>
-                                                <DialogDescription>
-                                                  This core feature will be implemented soon™
-                                                </DialogDescription>
-                                              </DialogHeader>
-                                            </DialogContent>
-                                          </Dialog>
+        <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center mt-01">
+          {!showInputArea && (
+            <div>
+              <p className="text-lg m-0 text-center">
+                {subjectsData.length === 0 &&
+                  (<>Looks like you haven't added any subjects.
+                    <br />You can track attendance manually by clicking  <br className="sm:hidden"></br>"Add a Subject" to add one.
+                  </>)}
+              </p>
+              {!isDemoMode && (
+                <>
+                  <div id="add-button" className="flex justify-center">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="mt-2">Add a Subject</Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Undergoing Bug Fixes</DialogTitle>
+                          <DialogDescription>
+                            This core feature will be implemented soon™
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </>
+              )}
+
+              {subjectsData.length === 0 ? (<>
+                <div className="text-center mt-4">
+                  <br />
+                  <span className="text-pink-600">Amrita Student?</span> Check out my <Link className="font-medium text-blue-600 dark:text-sky-400 hover:underline" href="/amrita">automating extension!</Link>
+                  <br />
+                  <br />Wanna try out <a href="#" onClick={() => { setIsDemoMode(true); }} className="font-medium text-blue-600 dark:text-sky-400 hover:underline">a demo?</a>
                 </div>
-              </>
-            )}
+              </>) : (<></>)
+              }
 
-            {subjectsData.length === 0 ? (<>
-              <div className="text-center mt-4">
-                <br />
-                <span className="text-pink-600">Amrita Student?</span> Try my <a className="font-medium text-blue-600 dark:text-sky-400 hover:underline" href="https://github.com/nithitsuki/attendance-grabber">automating extension!</a>
-                <br />
-                <br />Wanna try out <a href="#" onClick={() => { setIsDemoMode(true); }} className="font-medium text-blue-600 dark:text-sky-400 hover:underline">a demo?</a>
-              </div>
-            </>) : (<></>)
-            }
+            </div>
+          )}
+        </div>
 
-          </div>
-        )}
+        {showInputArea && <InputArea onCancel={() => setShowInputArea(false)} />}
+        {subjectsData.length != 0 ? (
+          <><SubjectDisplayArea setIsDemoMode={setIsDemoMode} isDemoMode={isDemoMode} subjectsData={subjectsData} updateSubjectAttribute={updateSubjectAttribute} /></>)
+          : (<></>)}
       </div>
-
-      {showInputArea && <InputArea onCancel={() => setShowInputArea(false)} />}
-      {subjectsData.length != 0 ? (
-        <><SubjectDisplayArea  setIsDemoMode={setIsDemoMode} isDemoMode={isDemoMode} subjectsData={subjectsData} updateSubjectAttribute={updateSubjectAttribute}  /></>)
-        : (<></>)}
-    </div>
       <Footer />
     </div>
   );
