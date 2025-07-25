@@ -2,7 +2,7 @@ import React from "react";
 
 interface TitleProps {
     title: string;
-    className: string;
+    className?: string;
 }
 
 export function Title({ title, className }: TitleProps) {
