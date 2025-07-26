@@ -1,23 +1,12 @@
 "use client";
-
+import { ShowTimeTableButton } from './ShowTimeTableButton';
+import { SettingsPopup } from './settingsPopup';
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SubjectCard from "@/components/SubjectCard"; // Assuming SubjectCard is in this path
 import React, { useState, useMemo } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 
 interface SubjectData {
     Sl_No: string;
@@ -103,7 +92,8 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
         <div className="flex flex-col items-center justify-center w-full">
 
             <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-2">
-                <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0">
+
+                <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0 my-2">
 
                     <Select onValueChange={setSortType} defaultValue="none">
                         <SelectTrigger className="w-[140px] sm:w-auto">
@@ -119,57 +109,12 @@ export default function SubjectDisplayArea({ subjectsData, updateSubjectAttribut
                         </SelectContent>
                     </Select>
 
-                    <div className="flex items-center space-x-2 mx-4 mt-0 mb-0">
-                        <Label htmlFor="abbr " className="sm:hidden">Abbr:</Label>
-                        <Label htmlFor="abbr" className="hidden sm:inline">Abbreviate:</Label>
-                        <Switch id="abbr" checked={abbreviateNames} onCheckedChange={setAbbreviateNames} />
+                    <div className='flex flex-row items-center space-x-2  px-4'>
+                        <SettingsPopup isDemoMode={isDemoMode} deleteAllSubjects={deleteAllSubjects} abbreviateNames={abbreviateNames} setAbbreviateNames={setAbbreviateNames} />
+                        {!isDemoMode && (<ShowTimeTableButton />)}
+                        {isDemoMode && (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-0">Exit Demo Mode</Button>)}
                     </div>
 
-                    {isDemoMode && (<Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0">
-                        Exit Demo Mode
-                    </Button>)}
-
-                    {!isDemoMode && (
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button onClick={() => setIsDemoMode(false)} className=" bg-red-400 mt-0 mb-4 sm:mb-0 hover:bg-red-500">
-                                    Clear All Subjects
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete your
-                                        current subjects and their attendance data.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction className=" bg-red-400 mt-0 mb-4 sm:mb-0 hover:bg-red-500" onClick={() => deleteAllSubjects()}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-
-                    )}
-
-                    <div className="mt-2 mb-2 flex flex-wrap justify-center">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button className=" m-0 sm:mb-0">
-                                    View Timetable
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>View Timetable</DialogTitle>
-                                    <DialogDescription>
-                                        You'll be able to upload your timetable here in the future. soon™
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
-                    </div>
                 </div>
 
                 <div className="flex flex-row flex-wrap w-full justify-evenly lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Student Attendance Dashboard",
-  description: "SAD",
+  description: "S.A.D - Student Attendance Dashboard. A simple attendance management system for students.",
 };
 
 export default function RootLayout({
