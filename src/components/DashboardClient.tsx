@@ -1,7 +1,6 @@
 'use client'
 import { useState } from "react"
 import Link from 'next/link'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import InputArea from "@/components/InputArea"
 import SubjectDisplayArea from "@/components/SubjectDisplayArea"
@@ -20,7 +19,8 @@ export default function DashboardClient() {
   }
 
   return (
-    <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center mt-01">
+    <>
+      <div id="main_content" className="flex flex-wrap gap-4 items-start justify-center">
       {!showInputArea && (
         <div>
           <p className="text-lg m-0 text-center">
@@ -28,30 +28,12 @@ export default function DashboardClient() {
               <>
                 Looks like you haven't added any subjects.
                 <br />
-                You can track attendance manually by clicking{" "}
-                <br className="sm:hidden"></br>
-                "Add a Subject" to add one.
+                There is currently no support to add subjects manually{" "}
+                <br className=""></br>
+                please contact me if you're interested in it.
               </>
             )}
           </p>
-          
-          {!isDemoMode && settings.showAddSubjects && (
-            <div id="add-button" className="flex justify-center">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="mt-2">Add a Subject</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Undergoing Bug Fixes</DialogTitle>
-                    <DialogDescription>
-                      This core feature will be implemented soon™
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            </div>
-          )}
 
           {subjects.length === 0 && (
             <div className="text-center mt-4">
@@ -78,5 +60,6 @@ export default function DashboardClient() {
       
       {subjects.length > 0 && <SubjectDisplayArea />}
     </div>
+    </>
   )
 }

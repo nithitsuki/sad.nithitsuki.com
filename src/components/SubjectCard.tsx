@@ -88,7 +88,7 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
 
     return (
         <div className='w-auto h-auto sm:w-auto'>
-            <Card className=" m-[2px] mb-4 border-[0.1px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2 backdrop-blur-[1.5px]" style={{ borderColor: `${borderColor}` }}>
+            <Card className=" m-[2px] mb-4 border-[0.1px] sm:border-[0.4px] border-solid sm:m-1 p-0 sm:p-2 backdrop-blur-[1.5px]" style={{ borderColor: `${borderColor}` }}>
                 <div className="pb-0 pt-1 pl-2 pr-2 rounded">
                     <div className='flex justify-center'>
                         <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px] text-center'>

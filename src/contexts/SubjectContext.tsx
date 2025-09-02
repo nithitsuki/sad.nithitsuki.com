@@ -1,6 +1,6 @@
 // src/contexts/SubjectContext.tsx
 'use client'
-import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useReducer, useEffect, ReactNode, useMemo } from 'react'
 import defaultSubjectsData from "@/../public/default-amrta-cse-sem2.json"
 
 export interface SubjectData {
@@ -231,7 +231,7 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
     }
   }, [state.settings, state.isLoaded])
 
-  const actions = {
+  const actions = useMemo(() => ({
     updateSubject: (courseId: string, updates: Partial<SubjectData>) => {
       dispatch({ type: 'UPDATE_SUBJECT', payload: { courseId, updates } })
     },
@@ -259,7 +259,7 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
         window.dispatchEvent(new Event("localDataUpdated"))
       }
     },
-  }
+  }), []);
 
   const contextValue: SubjectContextType = {
     subjects: state.subjects,

@@ -1,21 +1,12 @@
-import { Title } from './../components/Title';
-import { BackgroundGrid } from './../components/BackgroundGrid';
-import Footer from "@/components/Footer";
-import DashboardClient from "@/components/DashboardClient";
-import { SubjectProvider } from "@/contexts/SubjectContext";
-import DynamicTitle from "./../components/DynamicTitle";
+import HeroPage from "@/components/HeroPage";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Attendance Dashboard - Track Your Class Attendance',
+  description: 'A simple, elegant dashboard to monitor your class attendance, calculate required classes, and never miss your minimum attendance again.',
+  keywords: 'attendance, dashboard, class tracker, education, student tools',
+};
 
 export default function Home() {
-  return (
-    <SubjectProvider>
-      <div>
-        <div className="min-h-screen">
-          <BackgroundGrid />
-          <DynamicTitle />
-          <DashboardClient />
-        </div>
-        <Footer />
-      </div>
-    </SubjectProvider>
-  );
+  return <HeroPage />;
 }

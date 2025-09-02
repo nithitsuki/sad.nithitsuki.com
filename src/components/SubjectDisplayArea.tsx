@@ -5,11 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SubjectCard from "@/components/SubjectCard";
 import React, { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { useSubjects, type SubjectData } from "@/contexts/SubjectContext";
 
 export default function SubjectDisplayArea() {
     const { subjects, isDemoMode, settings, actions } = useSubjects();
     const [sortType, setSortType] = useState<string>("none");
+    const router = useRouter();
+
+    const handleExitDemo = () => {
+        actions.setDemoMode(false);
+        router.replace('/dashboard');
+    };
 
     const sortedSubjectsData = useMemo(() => {
         const getAttendancePercentage = (subject: SubjectData): number => {
@@ -58,7 +65,7 @@ export default function SubjectDisplayArea() {
 
     return (
         <div className="flex flex-col items-center justify-center w-full">
-            <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-2">
+            <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border backdrop-blur-[1.5px] mt-0">
                 <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0 my-0">
                     <Select onValueChange={setSortType} defaultValue="none">
                         <SelectTrigger className="w-[140px] sm:w-auto">
@@ -78,7 +85,7 @@ export default function SubjectDisplayArea() {
                         <SettingsPopup />
                         {!isDemoMode && (<ShowTimeTableButton />)}
                         {isDemoMode && (
-                            <Button onClick={() => actions.setDemoMode(false)} className=" bg-red-400 mt-0 mb-0">
+                            <Button onClick={handleExitDemo} className=" bg-red-400 mt-0 mb-0">
                                 Exit Demo Mode
                             </Button>
                         )}

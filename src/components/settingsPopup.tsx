@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
     Dialog,
     DialogContent,
@@ -41,6 +42,35 @@ export function SettingsPopup() {
                     <Label htmlFor="abbr">Abbreviate:</Label>
                     <Switch id="abbr" checked={settings.abbreviateNames} onCheckedChange={actions.toggleAbbreviation} />
                 </div>
+                
+                <div className="mx-4 mt-4 mb-0">
+                    <Link href="/">
+                        <Button variant="outline" className="w-full">
+                            ← Home
+                        </Button>
+                    </Link>
+                </div>
+
+                {!isDemoMode && (
+                    <div className="mx-4 mt-2 mb-0">
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button className="w-full" variant="outline">
+                                    Add a Subject
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Undergoing Bug Fixes</DialogTitle>
+                                    <DialogDescription>
+                                        This core feature will be implemented soon™
+                                    </DialogDescription>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+                )}
+
                 {!isDemoMode && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
