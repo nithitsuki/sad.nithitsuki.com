@@ -21,20 +21,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useSubjects } from "@/contexts/SubjectContext";
 
-interface SettingsPopupProps {
-    isDemoMode: boolean;
-    deleteAllSubjects: () => void;
-    abbreviateNames: boolean;
-    setAbbreviateNames: (value: boolean) => void;
-}
+export function SettingsPopup() {
+    const { isDemoMode, settings, actions } = useSubjects();
 
-export function SettingsPopup({
-    isDemoMode,
-    deleteAllSubjects,
-    abbreviateNames,
-    setAbbreviateNames,
-}: SettingsPopupProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -48,7 +39,7 @@ export function SettingsPopup({
                 </DialogHeader>
                 <div className="flex items-center space-x-2 mx-4 mt-0 mb-0">
                     <Label htmlFor="abbr">Abbreviate:</Label>
-                    <Switch id="abbr" checked={abbreviateNames} onCheckedChange={setAbbreviateNames} />
+                    <Switch id="abbr" checked={settings.abbreviateNames} onCheckedChange={actions.toggleAbbreviation} />
                 </div>
                 {!isDemoMode && (
                     <AlertDialog>
@@ -71,7 +62,7 @@ export function SettingsPopup({
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
                                     className="bg-red-400 mt-0 mb-4 sm:mb-0 hover:bg-red-500"
-                                    onClick={() => deleteAllSubjects()}
+                                    onClick={() => actions.deleteAllSubjects()}
                                 >
                                     Continue
                                 </AlertDialogAction>

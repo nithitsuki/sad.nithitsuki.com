@@ -1,36 +1,31 @@
 import React from 'react';
 import { Card, CardTitle } from './ui/card';
 import { MyPieChart } from './MyPieChart';
-
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import InfoPopup from './popups/InfoPopup';
 import EditPopup from './popups/EditPopup';
+import { useSubjects, type SubjectData } from "@/contexts/SubjectContext";
 
 interface SubjectCardProps {
-    Sl_No: string;            // Serial number
-    Course: string;           // Course name
-    CourseAbbreviated: string;           // Course name+
-    isAbbreviated: boolean; // Flag to indicate if the course name is abbreviated
-    total: number;           // localTotal classes occurred
-    present: number;         // Classes attended
-    absent: number;          // Classes skipped
-    // percentage: number;      // Attendance percentage
-    isDemoMode: boolean; // Flag to indicate if the card is in demo mode
-    MinAttendancePercentage: number;
-    daysOfWeek: string[]; // Array of days of the week the course is held
-    Notes: string;
-    UpdateStorageFunction: (Course: string, attribute: string, newValue: number) => void;
+    subject: SubjectData;
 }
 
+export default function SubjectCard({ subject }: SubjectCardProps) {
+    const { isDemoMode, settings, actions } = useSubjects();
+    
+    let [localTotal, setLocalTotal] = React.useState(subject.total);
+    let [localPresent, setLocalPresent] = React.useState(subject.present);
+    let [localAbsent, setLocalAbsent] = React.useState(subject.absent);
 
-
-export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbreviated, daysOfWeek, isDemoMode, total, absent, present, MinAttendancePercentage, UpdateStorageFunction, Notes }: SubjectCardProps) {
-    let [localTotal, setLocalTotal] = React.useState(total);
-    let [localPresent, setLocalPresent] = React.useState(present);
-    let [localAbsent, setLocalAbsent] = React.useState(absent);
+    // Update local state when subject prop changes
+    React.useEffect(() => {
+        setLocalTotal(subject.total);
+        setLocalPresent(subject.present);
+        setLocalAbsent(subject.absent);
+    }, [subject.total, subject.present, subject.absent]);
 
     const Attendance = React.useMemo(() =>
         ((localPresent / localTotal) * 100).toFixed(2),
@@ -38,13 +33,15 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
     );
 
     const SkippableClasses = React.useMemo(() =>
-        Math.floor((localPresent * (100 - MinAttendancePercentage) / MinAttendancePercentage) - localAbsent),
-        [localPresent, MinAttendancePercentage, localAbsent]
+        Math.floor((localPresent * (100 - subject.MinAttendancePercentage) / subject.MinAttendancePercentage) - localAbsent),
+        [localPresent, subject.MinAttendancePercentage, localAbsent]
     );
+    
     const ClassesNeeded = React.useMemo(() =>
-        Math.ceil((MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - MinAttendancePercentage)),
-        [localPresent, localTotal, MinAttendancePercentage]
+        Math.ceil((subject.MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - subject.MinAttendancePercentage)),
+        [localPresent, localTotal, subject.MinAttendancePercentage]
     );
+    
     const AttendancePercentageRounded = React.useMemo(() =>
         Math.floor(+Attendance),
         [Attendance]
@@ -54,7 +51,7 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
     const calculateColor = (percentage: number, minPercentage: number): string => {
         if (percentage >= 90) {
             // Dark green to lighter green
-            const lightness = 0.5 + 0.2 * ((percentage - 90) / 10); // 0.5 to 0.7
+            const lightness = 0.5 + 0.1 * ((percentage - 90) / 10); // 0.5 to 0.7
             return `oklch(${lightness} 0.18 140)`;
         } else if (percentage >= 80) {
             // Green to orange
@@ -81,34 +78,30 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
     };
 
     const borderColor = React.useMemo(() =>
-        calculateColor(AttendancePercentageRounded, MinAttendancePercentage),
-        [AttendancePercentageRounded, MinAttendancePercentage]
+        calculateColor(AttendancePercentageRounded, subject.MinAttendancePercentage),
+        [AttendancePercentageRounded, subject.MinAttendancePercentage]
     );
 
-    // console.log({
-    //   label: 'Attendance Check',
-    //   current: `${AttendancePercentageRounded}%`,
-    //   required: `${MinAttendancePercentage}%`,
-    //   isBelowThreshold: AttendancePercentageRounded < MinAttendancePercentage,
-    //   difference: `${(AttendancePercentageRounded - MinAttendancePercentage).toFixed(2)}%`,
-    //   types: {
-    //     current: typeof AttendancePercentageRounded,
-    //     required: typeof MinAttendancePercentage
-    //   }
-    // });
+    const updateSubjectAttribute = (attribute: string, newValue: number) => {
+        actions.updateSubject(subject.Course, { [attribute]: newValue });
+    };
+
     return (
         <div className='w-auto h-auto sm:w-auto'>
             <Card className=" m-[2px] mb-4 border-[0.1px] sm:border-[4px] border-solid sm:m-1 p-0 sm:p-2 backdrop-blur-[1.5px]" style={{ borderColor: `${borderColor}` }}>
-                {/* <div className="border border-solid pb-0 pt-1 pl-2 pr-2 rounded"> */}
                 <div className="pb-0 pt-1 pl-2 pr-2 rounded">
                     <div className='flex justify-center'>
-                        <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px] text-center'>{isAbbreviated ? CourseAbbreviated : Course}<span className='hidden sm:inline'> - [{localTotal}]</span>
-                            <span className='sm:hidden font-light text-xs sm:text-base'><br className='sm:hidden'></br>[{localPresent} out of {localTotal}]</span></CardTitle>
+                        <CardTitle className='mb-2 max-w-[22vw] text-xs sm:text-base sm:max-w-[200px] text-center'>
+                            {settings.abbreviateNames ? subject.CourseAbbreviation : subject.Course}
+                            <span className='hidden sm:inline'> - [{localTotal}]</span>
+                            <span className='sm:hidden font-light text-xs sm:text-base'>
+                                <br className='sm:hidden'></br>[{localPresent} out of {localTotal}]
+                            </span>
+                        </CardTitle>
                     </div>
-                    {/* <hr></hr> */}
                     <div className="sm:hidden w-full rounded bg-(--input)">
                         <div
-                            className="text-xs font-medium text-center p-0.5 leading-none rounded"
+                            className="text-xs font-medium text-center p-0.5 leading-none rounded text-white"
                             style={{ width: `${AttendancePercentageRounded}%`, backgroundColor: `${borderColor}` }}
                         >
                             {AttendancePercentageRounded}%
@@ -116,7 +109,6 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                     </div>
                     <div className="flex flex-row justify-between sm:flex-col gap-2">
                         <div className="hidden sm:inline" id='textinfo'>
-
                             <p>Classes Attended:  <br className='sm:hidden' />
                                 <input
                                     type="number"
@@ -128,10 +120,10 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                         const newTotal = localAbsent + newPresent;
                                         setLocalPresent(newPresent);
                                         setLocalTotal(newTotal);
-                                        UpdateStorageFunction(Course, "present", newPresent);
-                                        UpdateStorageFunction(Course, "total", newTotal);
+                                        updateSubjectAttribute("present", newPresent);
+                                        updateSubjectAttribute("total", newTotal);
                                     }}
-                                    onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
+                                    onClick={(e) => e.stopPropagation()}
                                 /></p>
                             <br className='sm:hidden' />
                             <p>You have skipped:<br className='sm:hidden' />
@@ -145,16 +137,15 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                         const newTotal = newAbsent + localPresent;
                                         setLocalAbsent(newAbsent);
                                         setLocalTotal(newTotal);
-                                        UpdateStorageFunction(Course, "absent", newAbsent);
-                                        UpdateStorageFunction(Course, "total", newTotal);
+                                        updateSubjectAttribute("absent", newAbsent);
+                                        updateSubjectAttribute("total", newTotal);
                                     }}
-                                    onClick={(e) => e.stopPropagation()} // Prevent card expansion when clicking input
+                                    onClick={(e) => e.stopPropagation()}
                                 /></p>
                         </div>
-                        <div className="flex items-center gap-4" id='PieChart_n_SkippableClasses'> {/* Flex container */}
-                            <div className='hidden sm:block w-30 h-30 sm:w-[120] sm:h-[120] m-0 p-0'> {/* Chart container */}
+                        <div className="flex items-center gap-4" id='PieChart_n_SkippableClasses'>
+                            <div className='hidden sm:flex w-[120px] h-[120px] items-center justify-center'>
                                 <MyPieChart
-                                    className="hidden sm:block"
                                     total={localTotal}
                                     present={localPresent}
                                     AttendancePercentageRounded={AttendancePercentageRounded}
@@ -162,9 +153,8 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                 />
                             </div>
                             <div className='flex-row w-max'>
-
-                                {AttendancePercentageRounded >= MinAttendancePercentage ? (
-                                    <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
+                                {AttendancePercentageRounded >= subject.MinAttendancePercentage ? (
+                                    <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'>
                                         <p className="text-sm text-foreground text-center">Skippable</p>
                                         <svg viewBox="0 0 100 100" className='w-24 h-22'>
                                             <text x={SkippableClasses > 9 ? "40%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill={"var(--foreground)"} letterSpacing={SkippableClasses > 9 ? "-13" : "0"}>
@@ -172,7 +162,7 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                             </text>
                                         </svg>
                                     </div>) : (
-                                    <div id='Need2pass' className='max-w-[22vw] sm:w-auto'> {/* Text container */}
+                                    <div id='Need2pass' className='max-w-[22vw] sm:w-auto'>
                                         <p className="text-bold text-regular text-red-400 text-center">Needed</p>
                                         <svg viewBox="0 0 100 100" className='w-22 h-22'>
                                             <text x={ClassesNeeded > 9 ? "60%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize={ClassesNeeded > 9 ? "80" : "100"} fontWeight="regular" fill="url(#redToOrangeGradient)">
@@ -189,14 +179,34 @@ export default function SubjectCard({ Sl_No, Course, CourseAbbreviated, isAbbrev
                                 )}
                             </div>
                         </div>
-
                         <hr></hr>
-                        {/* </div> */}
                     </div>
                     <div className="flex justify-center items-center gap-2">
-                        <InfoPopup Course={Course} MinAttendancePercentage={MinAttendancePercentage} localTotal={localTotal} localPresent={localPresent} localAbsent={localAbsent} SkippableClasses={SkippableClasses} AttendancePercentageRounded={AttendancePercentageRounded} borderColor={borderColor} Notes={Notes} daysOfWeek={daysOfWeek}></InfoPopup>
+                        <InfoPopup 
+                            Course={subject.Course} 
+                            MinAttendancePercentage={subject.MinAttendancePercentage} 
+                            localTotal={localTotal} 
+                            localPresent={localPresent} 
+                            localAbsent={localAbsent} 
+                            SkippableClasses={SkippableClasses} 
+                            AttendancePercentageRounded={AttendancePercentageRounded} 
+                            borderColor={borderColor} 
+                            Notes={subject.Notes || ""} 
+                            daysOfWeek={subject.daysOfWeek || []}
+                        />
                         <p>|</p>
-                        <EditPopup Sl_No={Sl_No} CourseAbbreviation={CourseAbbreviated} Course={Course} MinAttendancePercentage={MinAttendancePercentage} localTotal={localTotal} localPresent={localPresent} localAbsent={localAbsent} SkippableClasses={SkippableClasses} AttendancePercentageRounded={AttendancePercentageRounded} borderColor={borderColor}></EditPopup>
+                        <EditPopup 
+                            Sl_No={subject.Sl_No} 
+                            CourseAbbreviation={subject.CourseAbbreviation} 
+                            Course={subject.Course} 
+                            MinAttendancePercentage={subject.MinAttendancePercentage} 
+                            localTotal={localTotal} 
+                            localPresent={localPresent} 
+                            localAbsent={localAbsent} 
+                            SkippableClasses={SkippableClasses} 
+                            AttendancePercentageRounded={AttendancePercentageRounded} 
+                            borderColor={borderColor}
+                        />
                     </div>
                 </div>
             </Card>
