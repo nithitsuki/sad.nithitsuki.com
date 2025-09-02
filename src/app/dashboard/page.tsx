@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   description: 'Track your attendance, view statistics, and manage your subjects.',
 };
 
-export default async function Dashboard({
+export default function Dashboard({
   searchParams,
 }: {
-  searchParams: { demo: string };
+  searchParams: { demo?: string }
 }) {
-  const isDemo = (await searchParams.demo) === 'true';
+  const isDemo = searchParams.demo === 'true';
 
   return (
     <SubjectProvider>

@@ -45,15 +45,7 @@ export function MyPieChart({
                 <Cell key={`cell-attended`} fill={backgroundColor} />
                 <Cell key={`cell-missed`} fill="#00000000" />
             </Pie>
-            <text 
-                x={60} 
-                y={60} 
-                textAnchor="middle" 
-                dominantBaseline="middle" 
-                fontSize="14" 
-                fontWeight="normal" 
-                fill="var(--foreground)"
-            >
+            <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="1rem" fontWeight="regular" fill="var(--foreground)">
                 {`${AttendancePercentageRounded}%`}
             </text>
         </PieChart>
