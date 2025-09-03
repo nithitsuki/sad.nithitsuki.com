@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import DashboardClient from "@/components/DashboardClient";
 import { SubjectProvider } from "@/contexts/SubjectContext";
 import DynamicTitle from "./../../components/DynamicTitle";
-import DashboardWrapper from "@/components/DashboardWrapper";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,25 +11,17 @@ export const metadata: Metadata = {
   description: 'Track your attendance, view statistics, and manage your subjects.',
 };
 
-export default function Dashboard({
-  searchParams,
-}: {
-  searchParams: { demo?: string }
-}) {
-  const isDemo = searchParams.demo === 'true';
-
+export default function Dashboard() {
   return (
     <SubjectProvider>
-      <DashboardWrapper isDemo={isDemo}>
-        <div>
-          <div className="min-h-screen">
-            <BackgroundGrid />
-            <DynamicTitle />
-            <DashboardClient />
-          </div>
-          <Footer />
+      <div>
+        <div className="min-h-screen">
+          <BackgroundGrid />
+          <DynamicTitle />
+          <DashboardClient />
         </div>
-      </DashboardWrapper>
+        <Footer />
+      </div>
     </SubjectProvider>
   );
 }

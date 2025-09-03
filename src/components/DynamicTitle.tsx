@@ -9,6 +9,8 @@ export default function DynamicTitle() {
     return <Title title="Attendance Dashboard" />;
   }
   
-  const title = settings.titlePayload || "Attendance Dashboard";
-  return <Title title={title} />;
+  if (settings.titlePayload) {
+    return <div dangerouslySetInnerHTML={{ __html: settings.titlePayload }} />;
+  }
+  return <Title title="Attendance Dashboard" />;
 }

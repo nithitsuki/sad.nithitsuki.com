@@ -43,7 +43,7 @@ export default function HeroPage() {
                             </Button>
                         </Link>
 
-                        <Link href="/dashboard?demo=true">
+                        <Link href="/dashboard/demo">
                             <Button variant="outline" size="lg" className="text-lg px-8 py-4">
                                 Try Demo
                             </Button>
