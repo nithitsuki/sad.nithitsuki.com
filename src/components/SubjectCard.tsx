@@ -16,19 +16,25 @@ interface SubjectCardProps {
 export default function SubjectCard({ subject }: SubjectCardProps) {
     const { isDemoMode, settings, actions } = useSubjects();
     
+    // Adjust for new schema: present includes dutyLeave, absent is what's left.
+    const effectivePresent = subject.present + (subject.dutyLeave || 0);
+    const effectiveAbsent = subject.total - effectivePresent;
+
     let [localTotal, setLocalTotal] = React.useState(subject.total);
-    let [localPresent, setLocalPresent] = React.useState(subject.present);
-    let [localAbsent, setLocalAbsent] = React.useState(subject.absent);
+    let [localPresent, setLocalPresent] = React.useState(effectivePresent);
+    let [localAbsent, setLocalAbsent] = React.useState(effectiveAbsent);
 
     // Update local state when subject prop changes
     React.useEffect(() => {
+        const newEffectivePresent = subject.present + (subject.dutyLeave || 0);
+        const newEffectiveAbsent = subject.total - newEffectivePresent;
         setLocalTotal(subject.total);
-        setLocalPresent(subject.present);
-        setLocalAbsent(subject.absent);
-    }, [subject.total, subject.present, subject.absent]);
+        setLocalPresent(newEffectivePresent);
+        setLocalAbsent(newEffectiveAbsent);
+    }, [subject.total, subject.present, subject.dutyLeave]);
 
     const Attendance = React.useMemo(() =>
-        ((localPresent / localTotal) * 100).toFixed(2),
+        localTotal > 0 ? ((localPresent / localTotal) * 100).toFixed(2) : "0.00",
         [localPresent, localTotal]
     );
 
@@ -120,7 +126,10 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                                         const newTotal = localAbsent + newPresent;
                                         setLocalPresent(newPresent);
                                         setLocalTotal(newTotal);
-                                        updateSubjectAttribute("present", newPresent);
+                                        // Note: This interaction might be complex with the new schema.
+                                        // Assuming direct manipulation of 'present' is desired here.
+                                        // The dutyLeave portion is not editable via this input.
+                                        updateSubjectAttribute("present", newPresent - (subject.dutyLeave || 0));
                                         updateSubjectAttribute("total", newTotal);
                                     }}
                                     onClick={(e) => e.stopPropagation()}
@@ -137,7 +146,8 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                                         const newTotal = newAbsent + localPresent;
                                         setLocalAbsent(newAbsent);
                                         setLocalTotal(newTotal);
-                                        updateSubjectAttribute("absent", newAbsent);
+                                        // This updates the 'absent' field in the context
+                                        updateSubjectAttribute("absent", newAbsent + (subject.dutyLeave || 0));
                                         updateSubjectAttribute("total", newTotal);
                                     }}
                                     onClick={(e) => e.stopPropagation()}

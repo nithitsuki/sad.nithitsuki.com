@@ -10,8 +10,11 @@ export interface SubjectData {
   total: number;
   present: number;
   absent: number;
+  dutyLeave?: number;
+  medicalLeave?: number;
   percentage: number;
   MinAttendancePercentage: number;
+  schemaVersion: number;
   daysOfWeek?: string[];
   Notes?: string;
   end_date?: string;
