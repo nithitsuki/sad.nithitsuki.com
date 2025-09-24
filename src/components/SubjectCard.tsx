@@ -42,7 +42,12 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
         Math.floor((localPresent * (100 - subject.MinAttendancePercentage) / subject.MinAttendancePercentage) - localAbsent),
         [localPresent, subject.MinAttendancePercentage, localAbsent]
     );
-    
+
+    const SkippableClassesAfterMedicalLeave = React.useMemo(() =>
+            Math.floor(((localPresent + (subject.medicalLeave || 0)) * (100 - subject.MinAttendancePercentage) / subject.MinAttendancePercentage) - localAbsent),
+        [localPresent, subject.MinAttendancePercentage, localAbsent]
+    );
+
     const ClassesNeeded = React.useMemo(() =>
         Math.ceil((subject.MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - subject.MinAttendancePercentage)),
         [localPresent, localTotal, subject.MinAttendancePercentage]
@@ -51,6 +56,51 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
     const AttendancePercentageRounded = React.useMemo(() =>
         Math.floor(+Attendance),
         [Attendance]
+    );
+
+    const AttendanceAfterMedicalLeave = React.useMemo(() =>
+        localTotal > 0 ? (((localPresent + (subject.medicalLeave || 0)) / localTotal) * 100).toFixed(2) : "0.00",
+        [localPresent, localTotal, subject.medicalLeave]
+    );
+
+    const AttendancePercentageAfterMedicalLeaveRounded = React.useMemo(() =>
+        Math.floor(+AttendanceAfterMedicalLeave),
+        [AttendanceAfterMedicalLeave]
+    );
+
+    const ClassesNeededAfterMedicalLeave = React.useMemo(() =>
+        Math.ceil((subject.MinAttendancePercentage * localTotal - 100 * (localPresent + (subject.medicalLeave || 0))) / (100 - subject.MinAttendancePercentage)),
+        [localPresent, localTotal, subject.MinAttendancePercentage, subject.medicalLeave]
+    );
+
+    const showMedicalLeaveInfo = subject.medicalLeave && subject.medicalLeave > 0 && SkippableClassesAfterMedicalLeave > SkippableClasses;
+
+    const AttendanceDisplay = ({ isNeeded, value, label }: { isNeeded: boolean, value: number, label: string }) => (
+        <div className='max-w-[22vw] sm:w-auto'>
+            <p className={`text-sm text-center ${isNeeded ? 'text-red-400' : 'text-foreground'}`}>{label}</p>
+            <svg viewBox="0 0 100 100" className='w-22 h-22'>
+                <text
+                    x={value > 9 ? (isNeeded ? "60%" : "40%") : "50%"}
+                    y="50%"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontSize={value > 9 ? "80" : "100"}
+                    fontWeight="regular"
+                    fill={isNeeded ? "url(#redToOrangeGradient)" : "var(--foreground)"}
+                    letterSpacing={value > 9 && !isNeeded ? "-13" : "0"}
+                >
+                    {isNeeded ? `${value}!!` : `${value}`}
+                </text>
+                {!isNeeded && (
+                    <defs>
+                        <linearGradient id="redToOrangeGradient" x1="20%" y1="20%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#FF0000" />
+                            <stop offset="100%" stopColor="#FF7700" />
+                        </linearGradient>
+                    </defs>
+                )}
+            </svg>
+        </div>
     );
 
     // Uses OKLCH for perceptually uniform color transitions
@@ -163,29 +213,45 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                                 />
                             </div>
                             <div className='flex-row w-max'>
-                                {AttendancePercentageRounded >= subject.MinAttendancePercentage ? (
-                                    <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'>
-                                        <p className="text-sm text-foreground text-center">Skippable</p>
-                                        <svg viewBox="0 0 100 100" className='w-24 h-22'>
-                                            <text x={SkippableClasses > 9 ? "40%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill={"var(--foreground)"} letterSpacing={SkippableClasses > 9 ? "-13" : "0"}>
-                                                {`${SkippableClasses}`}
-                                            </text>
-                                        </svg>
-                                    </div>) : (
-                                    <div id='Need2pass' className='max-w-[22vw] sm:w-auto'>
-                                        <p className="text-bold text-regular text-red-400 text-center">Needed</p>
-                                        <svg viewBox="0 0 100 100" className='w-22 h-22'>
-                                            <text x={ClassesNeeded > 9 ? "60%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize={ClassesNeeded > 9 ? "80" : "100"} fontWeight="regular" fill="url(#redToOrangeGradient)">
-                                                {`${ClassesNeeded}!!`}
-                                            </text>
-                                            <defs>
-                                                <linearGradient id="redToOrangeGradient" x1="20%" y1="20%" x2="100%" y2="100%">
-                                                    <stop offset="0%" stopColor="#FF0000" />
-                                                    <stop offset="100%" stopColor="#FF7700" />
-                                                </linearGradient>
-                                            </defs>
-                                        </svg>
+                                {showMedicalLeaveInfo ? (
+                                    <div className="flex items-center gap-1">
+                                        <AttendanceDisplay
+                                            isNeeded={AttendancePercentageRounded < subject.MinAttendancePercentage}
+                                            value={AttendancePercentageRounded < subject.MinAttendancePercentage ? ClassesNeeded : SkippableClasses}
+                                            label="Normal"
+                                        />
+                                        <div className="h-12 border-l border-foreground/50 mx-1"></div>
+                                        <AttendanceDisplay
+                                            isNeeded={AttendancePercentageAfterMedicalLeaveRounded < subject.MinAttendancePercentage}
+                                            value={AttendancePercentageAfterMedicalLeaveRounded < subject.MinAttendancePercentage ? ClassesNeededAfterMedicalLeave : SkippableClassesAfterMedicalLeave}
+                                            label="With ML"
+                                        />
                                     </div>
+                                ) : (
+                                    AttendancePercentageRounded >= subject.MinAttendancePercentage ? (
+                                        <div id='SkippableClasses' className='max-w-[22vw] sm:w-auto'>
+                                            <p className="text-sm text-foreground text-center">Skippable</p>
+                                            <svg viewBox="0 0 100 100" className='w-24 h-22'>
+                                                <text x={SkippableClasses > 9 ? "40%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="100" fontWeight="regular" fill={"var(--foreground)"} letterSpacing={SkippableClasses > 9 ? "-13" : "0"}>
+                                                    {`${SkippableClasses}`}
+                                                </text>
+                                            </svg>
+                                        </div>) : (
+                                        <div id='Need2pass' className='max-w-[22vw] sm:w-auto'>
+                                            <p className="text-bold text-regular text-red-400 text-center">Needed</p>
+                                            <svg viewBox="0 0 100 100" className='w-22 h-22'>
+                                                <text x={ClassesNeeded > 9 ? "60%" : "50%"} y="50%" textAnchor="middle" dominantBaseline="middle" fontSize={ClassesNeeded > 9 ? "80" : "100"} fontWeight="regular" fill="url(#redToOrangeGradient)">
+                                                    {`${ClassesNeeded}!!`}
+                                                </text>
+                                                <defs>
+                                                    <linearGradient id="redToOrangeGradient" x1="20%" y1="20%" x2="100%" y2="100%">
+                                                        <stop offset="0%" stopColor="#FF0000" />
+                                                        <stop offset="100%" stopColor="#FF7700" />
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
+                                        </div>
+                                    )
                                 )}
                             </div>
                         </div>
