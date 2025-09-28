@@ -43,10 +43,12 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
         [localPresent, subject.MinAttendancePercentage, localAbsent]
     );
 
-    const SkippableClassesAfterMedicalLeave = React.useMemo(() =>
-            Math.floor(((localPresent + (subject.medicalLeave || 0)) * (100 - subject.MinAttendancePercentage) / subject.MinAttendancePercentage) - localAbsent),
-        [localPresent, subject.MinAttendancePercentage, localAbsent]
-    );
+    const SkippableClassesAfterMedicalLeave = React.useMemo(() => {
+        // When considering medical leave, it's treated as present
+        const effectivePresentWithMedical = localPresent + (subject.medicalLeave || 0);
+        const effectiveAbsentWithMedical = localTotal - effectivePresentWithMedical;
+        return Math.floor((effectivePresentWithMedical * (100 - subject.MinAttendancePercentage) / subject.MinAttendancePercentage) - effectiveAbsentWithMedical);
+    }, [localPresent, localTotal, subject.MinAttendancePercentage, subject.medicalLeave]);
 
     const ClassesNeeded = React.useMemo(() =>
         Math.ceil((subject.MinAttendancePercentage * localTotal - 100 * localPresent) / (100 - subject.MinAttendancePercentage)),
@@ -58,22 +60,15 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
         [Attendance]
     );
 
-    const AttendanceAfterMedicalLeave = React.useMemo(() =>
-        localTotal > 0 ? (((localPresent + (subject.medicalLeave || 0)) / localTotal) * 100).toFixed(2) : "0.00",
-        [localPresent, localTotal, subject.medicalLeave]
-    );
 
-    const AttendancePercentageAfterMedicalLeaveRounded = React.useMemo(() =>
-        Math.floor(+AttendanceAfterMedicalLeave),
-        [AttendanceAfterMedicalLeave]
-    );
 
-    const ClassesNeededAfterMedicalLeave = React.useMemo(() =>
-        Math.ceil((subject.MinAttendancePercentage * localTotal - 100 * (localPresent + (subject.medicalLeave || 0))) / (100 - subject.MinAttendancePercentage)),
-        [localPresent, localTotal, subject.MinAttendancePercentage, subject.medicalLeave]
-    );
+    const ClassesNeededAfterMedicalLeave = React.useMemo(() => {
+        // When considering medical leave, it's treated as present
+        const effectivePresentWithMedical = localPresent + (subject.medicalLeave || 0);
+        return Math.ceil((subject.MinAttendancePercentage * localTotal - 100 * effectivePresentWithMedical) / (100 - subject.MinAttendancePercentage));
+    }, [localPresent, localTotal, subject.MinAttendancePercentage, subject.medicalLeave]);
 
-    const showMedicalLeaveInfo = subject.medicalLeave && subject.medicalLeave > 0 && SkippableClassesAfterMedicalLeave > SkippableClasses;
+    const showMedicalLeaveInfo = subject.medicalLeave && subject.medicalLeave > 0 && SkippableClassesAfterMedicalLeave !== SkippableClasses;
 
     const AttendanceDisplay = ({ isNeeded, value, label }: { isNeeded: boolean, value: number, label: string }) => (
         <div className='max-w-[22vw] sm:w-auto'>
@@ -222,8 +217,8 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                                         />
                                         <div className="h-12 border-l border-foreground/50 mx-1"></div>
                                         <AttendanceDisplay
-                                            isNeeded={AttendancePercentageAfterMedicalLeaveRounded < subject.MinAttendancePercentage}
-                                            value={AttendancePercentageAfterMedicalLeaveRounded < subject.MinAttendancePercentage ? ClassesNeededAfterMedicalLeave : SkippableClassesAfterMedicalLeave}
+                                            isNeeded={SkippableClassesAfterMedicalLeave < 0}
+                                            value={SkippableClassesAfterMedicalLeave < 0 ? ClassesNeededAfterMedicalLeave : SkippableClassesAfterMedicalLeave}
                                             label="With ML"
                                         />
                                     </div>
