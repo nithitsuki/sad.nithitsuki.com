@@ -10,6 +10,7 @@ export interface SubjectData {
   total: number;
   present: number;
   absent: number;
+  courseCode?: string;
   dutyLeave?: number;
   medicalLeave?: number;
   percentage: number;
