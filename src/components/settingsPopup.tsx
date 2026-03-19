@@ -52,26 +52,6 @@ export function SettingsPopup() {
                 </div>
 
                 {!isDemoMode && (
-                    <div className="mx-4 mt-2 mb-0">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button className="w-full" variant="outline">
-                                    Add a Subject
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Undergoing Bug Fixes</DialogTitle>
-                                    <DialogDescription>
-                                        This core feature will be implemented soon™
-                                    </DialogDescription>
-                                </DialogHeader>
-                            </DialogContent>
-                        </Dialog>
-                    </div>
-                )}
-
-                {!isDemoMode && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button className="bg-red-400 mt-0 mb-4 sm:mb-0 hover:bg-red-500 w-full">

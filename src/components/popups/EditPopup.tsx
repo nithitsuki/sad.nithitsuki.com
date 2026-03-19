@@ -24,7 +24,7 @@ function EditPopup(props: EditPopupProps) {
     const [open, setOpen] = useState(false)
     const [present, setPresent] = useState(props.localPresent)
     const [absent, setAbsent] = useState(props.localAbsent)
-    const [minAttendance, setMinAttendance] = useState(props.MinAttendancePercentage)
+    const minAttendance = props.MinAttendancePercentage
 
     const total = present + absent
     const currentAttendancePercentage = total > 0 ? Math.round((present / total) * 100) : 0
@@ -138,21 +138,6 @@ function EditPopup(props: EditPopupProps) {
                                     <div className="border-l pl-2">
                                         <span className="text-xs text-muted-foreground">Total:</span>
                                         <div className="font-medium h-8 flex DaysOfWeek-center">{total}</div>
-                                    </div>
-                                </div>
-                                <div className="flex justify-between DaysOfWeek-center">
-                                    <Label htmlFor="minAttendance" className="text-sm text-muted-foreground">Minimum Percentage:</Label>
-                                    <div className="flex DaysOfWeek-center gap-1">
-                                        <Input
-                                            id="minAttendance"
-                                            type="number"
-                                            min="0"
-                                            max="100"
-                                            value={minAttendance}
-                                            onChange={(e) => setMinAttendance(Number(e.target.value))}
-                                            className="h-8 w-16"
-                                        />
-                                        <span className="font-medium">%</span>
                                     </div>
                                 </div>
 
