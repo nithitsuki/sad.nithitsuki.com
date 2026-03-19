@@ -22,17 +22,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # Install pnpm
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      # Install bun to speed up installation of dependencies and build
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10.9.0
-      # Setup Node
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "23.9.0"
-          cache: 'pnpm'
+          bun-version: latest
       # Setup Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -44,15 +38,15 @@ jobs:
         with:
           path: |
             .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lock') }}-
       # Install dependencies
       - name: Install dependencies
-        run: pnpm install
+        run: bun install
       # Build with Next.js
       - name: Build with Next.js
-        run: pnpm run build
+        run: bun run build
       # Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
