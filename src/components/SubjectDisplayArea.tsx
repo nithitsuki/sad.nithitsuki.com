@@ -69,7 +69,7 @@ export default function SubjectDisplayArea() {
     return (
         <div className="flex flex-col items-center justify-center w-full">
             <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center rounded-md border bg-[#0000001c] backdrop-blur-[1.5px] mt-0">
-                <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0 my-0">
+                <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 pt-2 my-0">
                     {showYar ? (
                         <Button variant="outline" onClick={() => setShowYar(false)}>
                             ← Back to Dashboard
