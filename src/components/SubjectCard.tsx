@@ -150,13 +150,6 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                             </span>
                         </CardTitle>
                     </div>
-                    {settings.showODPercentage && localTotal > 0 && (subject.dutyLeave || 0) > 0 && (
-                        <div className="flex justify-center mb-2">
-                            <div className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold">
-                                <span>OD: {((subject.dutyLeave || 0) / localTotal * 100).toFixed(1)}%</span>
-                            </div>
-                        </div>
-                    )}
                     <div className="sm:hidden w-full rounded bg-(--input)">
                         <div
                             className="text-xs font-medium text-center p-0.5 leading-none rounded text-white"
@@ -210,6 +203,8 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                                 <MyPieChart
                                     total={localTotal}
                                     present={localPresent}
+                                    dutyLeave={subject.dutyLeave || 0}
+                                    showODPercentage={settings.showODPercentage}
                                     AttendancePercentageRounded={AttendancePercentageRounded}
                                     backgroundColor={borderColor}
                                 />

@@ -25,7 +25,6 @@ interface Settings {
   abbreviateNames: boolean;
   showAddSubjects: boolean;
   titlePayload?: string;
-  advancedMode: boolean;
   showODPercentage: boolean;
 }
 
@@ -45,7 +44,6 @@ type SubjectAction =
   | { type: 'SET_TITLE_PAYLOAD'; payload: string | undefined }
   | { type: 'DELETE_ALL_SUBJECTS' }
   | { type: 'SET_LOADED'; payload: boolean }
-  | { type: 'SET_ADVANCED_MODE'; payload: boolean }
   | { type: 'SET_SHOW_OD_PERCENTAGE'; payload: boolean }
 
 interface SubjectContextType {
@@ -60,7 +58,6 @@ interface SubjectContextType {
     setShowAddSubjects: (show: boolean) => void
     setTitlePayload: (title: string | undefined) => void
     deleteAllSubjects: () => void
-    setAdvancedMode: (enabled: boolean) => void
     setShowODPercentage: (enabled: boolean) => void
   }
 }
@@ -72,7 +69,6 @@ const initialState: SubjectState = {
     abbreviateNames: true,
     showAddSubjects: true,
     titlePayload: undefined,
-    advancedMode: false,
     showODPercentage: false,
   },
   isLoaded: false,
@@ -151,15 +147,6 @@ function subjectReducer(state: SubjectState, action: SubjectAction): SubjectStat
         isLoaded: action.payload,
       }
     
-    case 'SET_ADVANCED_MODE':
-      return {
-        ...state,
-        settings: {
-          ...state.settings,
-          advancedMode: action.payload,
-        },
-      }
-    
     case 'SET_SHOW_OD_PERCENTAGE':
       return {
         ...state,
@@ -230,9 +217,6 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
         if (typeof settings.titlePayload === 'string') {
           dispatch({ type: 'SET_TITLE_PAYLOAD', payload: settings.titlePayload })
         }
-        if (typeof settings.advancedMode === 'boolean') {
-          dispatch({ type: 'SET_ADVANCED_MODE', payload: settings.advancedMode })
-        }
         if (typeof settings.showODPercentage === 'boolean') {
           dispatch({ type: 'SET_SHOW_OD_PERCENTAGE', payload: settings.showODPercentage })
         }
@@ -294,10 +278,6 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
         localStorage.removeItem("subjectsData")
         window.dispatchEvent(new Event("localDataUpdated"))
       }
-    },
-
-    setAdvancedMode: (enabled: boolean) => {
-      dispatch({ type: 'SET_ADVANCED_MODE', payload: enabled })
     },
 
     setShowODPercentage: (enabled: boolean) => {

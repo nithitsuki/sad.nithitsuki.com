@@ -1,27 +1,20 @@
 "use client";
 import { ShowTimeTableButton } from './ShowTimeTableButton';
+import { ShowCalendarButton } from './ShowCalendarButton';
 import { SettingsPopup } from './settingsPopup';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import SubjectCard from "@/components/SubjectCard";
-import { AdvancedModePanel } from './AdvancedModePanel';
 import { AttendanceRewindDashboard } from './AttendanceRewindDashboard';
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useSubjects, type SubjectData } from "@/contexts/SubjectContext";
 
 export default function SubjectDisplayArea() {
-    const { subjects, isDemoMode, settings, actions } = useSubjects();
+    const { subjects, isDemoMode, actions } = useSubjects();
     const [sortType, setSortType] = useState<string>("none");
-    const [viewMode, setViewMode] = useState<'normal' | 'advanced' | 'rewind'>('normal');
+    const [showYar, setShowYar] = useState(false);
     const router = useRouter();
-    const effectiveViewMode = settings.advancedMode ? viewMode : 'normal';
-
-    useEffect(() => {
-        if (!settings.advancedMode && viewMode !== 'normal') {
-            setViewMode('normal');
-        }
-    }, [settings.advancedMode, viewMode]);
 
     const handleExitDemo = () => {
         actions.setDemoMode(false);
@@ -75,44 +68,13 @@ export default function SubjectDisplayArea() {
 
     return (
         <div className="flex flex-col items-center justify-center w-full">
-            {/* View Mode Navigation - only show when advanced mode is enabled */}
-            {settings.advancedMode && (
-                <div className="flex gap-2 justify-center mb-4 flex-wrap">
-                    <Button 
-                        variant={effectiveViewMode === 'normal' ? 'default' : 'outline'}
-                        onClick={() => setViewMode('normal')}
-                    >
-                        Dashboard
-                    </Button>
-                    <Button 
-                        variant={effectiveViewMode === 'advanced' ? 'default' : 'outline'}
-                        onClick={() => setViewMode('advanced')}
-                    >
-                        Advanced
-                    </Button>
-                    <Button 
-                        variant={effectiveViewMode === 'rewind' ? 'default' : 'outline'}
-                        onClick={() => setViewMode('rewind')}
-                    >
-                        YAR! 📊
-                    </Button>
-                </div>
-            )}
-
-            {/* Advanced Mode Panel View */}
-            {effectiveViewMode === 'advanced' && (
-                <AdvancedModePanel />
-            )}
-
-            {/* Attendance Rewind Dashboard View */}
-            {effectiveViewMode === 'rewind' && (
-                <AttendanceRewindDashboard />
-            )}
-
-            {/* Normal Dashboard View */}
-            {effectiveViewMode === 'normal' && (
-                <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border bg-[#0000001c] backdrop-blur-[1.5px] mt-0">
-                    <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0 my-0">
+            <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center rounded-md border bg-[#0000001c] backdrop-blur-[1.5px] mt-0">
+                <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0 my-0">
+                    {showYar ? (
+                        <Button variant="outline" onClick={() => setShowYar(false)}>
+                            ← Back to Dashboard
+                        </Button>
+                    ) : (
                         <Select onValueChange={setSortType} defaultValue="none">
                             <SelectTrigger className="w-[140px] sm:w-auto">
                                 <SelectValue placeholder="Sort By" />
@@ -126,18 +88,23 @@ export default function SubjectDisplayArea() {
                                 <SelectItem value="skippable-asc">Skippable Classes (Low to High)</SelectItem>
                             </SelectContent>
                         </Select>
+                    )}
 
-                        <div className='flex flex-row items-center space-x-2  px-4'>
-                            <SettingsPopup />
-                            {!isDemoMode && (<ShowTimeTableButton />)}
-                            {isDemoMode && (
-                                <Button onClick={handleExitDemo} className=" bg-red-400 mt-0 mb-0">
-                                    Exit Demo Mode
-                                </Button>
-                            )}
-                        </div>
+                    <div className='flex flex-row items-center space-x-2 px-4'>
+                        <SettingsPopup onOpenYar={() => setShowYar(true)} />
+                        <ShowCalendarButton />
+                        {!isDemoMode && <ShowTimeTableButton />}
+                        {isDemoMode && (
+                            <Button onClick={handleExitDemo} className="bg-red-400 mt-0 mb-0">
+                                Exit Demo Mode
+                            </Button>
+                        )}
                     </div>
+                </div>
 
+                {showYar ? (
+                    <AttendanceRewindDashboard />
+                ) : (
                     <div className="flex flex-row flex-wrap w-full justify-evenly lg:grid lg:grid-cols-3 xl:grid-cols-4 sm:justify-items-center" id="subject-cards">
                         {sortedSubjectsData.map(subject => (
                             <SubjectCard
@@ -146,8 +113,8 @@ export default function SubjectDisplayArea() {
                             />
                         ))}
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
