@@ -35,7 +35,7 @@ export function SettingsPopup({ onOpenYar }: SettingsPopupProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button size="icon" className="ml-4 mb-0">
+                <Button size="icon" className="mb-0">
                     <FiSettings />
                 </Button>
             </DialogTrigger>

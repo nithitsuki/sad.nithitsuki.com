@@ -4,10 +4,27 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useSubjects } from '@/contexts/SubjectContext';
 
+type SubjectMetric = {
+  course: string;
+  name: string;
+  total: number;
+  minRequired: number;
+  presentRaw: number;
+  dutyLeave: number;
+  medicalLeave: number;
+  presentWithOD: number;
+  currentPct: number;
+  withoutODPct: number;
+  withMLPct: number;
+  skippedIncludingOD: number;
+  wouldFailWithoutOD: boolean;
+  wouldFailWithoutMedical: boolean;
+};
+
 export function AttendanceRewindDashboard() {
   const { subjects, settings } = useSubjects();
 
-  const subjectMetrics = useMemo(() => {
+  const metrics = useMemo<SubjectMetric[]>(() => {
     return subjects.map((subject) => {
       const total = Math.max(0, subject.total || 0);
       const minRequired = Math.max(0, subject.MinAttendancePercentage || 0);
@@ -15,145 +32,139 @@ export function AttendanceRewindDashboard() {
       const dutyLeave = Math.max(0, subject.dutyLeave || 0);
       const medicalLeave = Math.max(0, subject.medicalLeave || 0);
 
-      // Mirrors SubjectCard behavior: current attendance includes OD.
       const presentWithOD = Math.min(total, presentRaw + dutyLeave);
-      const presentWithODAndMedical = Math.min(total, presentWithOD + medicalLeave);
+      const presentWithODAndML = Math.min(total, presentWithOD + medicalLeave);
 
-      const attendancePct = total > 0 ? (presentWithOD / total) * 100 : 0;
-      const attendanceWithMedicalPct = total > 0 ? (presentWithODAndMedical / total) * 100 : 0;
+      const currentPct = total > 0 ? (presentWithOD / total) * 100 : 0;
+      const withoutODPct = total > 0 ? (presentRaw / total) * 100 : 0;
+      const withMLPct = total > 0 ? (presentWithODAndML / total) * 100 : 0;
+      const skippedIncludingOD = Math.max(0, total - presentRaw);
 
-      const absentCurrent = Math.max(0, total - presentWithOD);
-      const absentWithMedical = Math.max(0, total - presentWithODAndMedical);
-      const denominator = 100 - minRequired;
-
-      const classesNeededCurrent =
-        total > 0 && denominator > 0
-          ? Math.max(0, Math.ceil((minRequired * total - 100 * presentWithOD) / denominator))
-          : 0;
-      const classesNeededWithMedical =
-        total > 0 && denominator > 0
-          ? Math.max(0, Math.ceil((minRequired * total - 100 * presentWithODAndMedical) / denominator))
-          : 0;
-
-      const skippableCurrent =
-        total > 0 && minRequired > 0
-          ? Math.max(0, Math.floor((presentWithOD * (100 - minRequired)) / minRequired - absentCurrent))
-          : 0;
-      const skippableWithMedical =
-        total > 0 && minRequired > 0
-          ? Math.max(0, Math.floor((presentWithODAndMedical * (100 - minRequired)) / minRequired - absentWithMedical))
-          : 0;
-
-      const isSafe = attendancePct >= minRequired;
-      const displayName = settings.abbreviateNames ? subject.CourseAbbreviation : subject.Course;
+      const wouldFailWithoutOD = dutyLeave > 0 && currentPct >= minRequired && withoutODPct < minRequired;
+      const wouldFailWithoutMedical = medicalLeave > 0 && withMLPct >= minRequired && currentPct < minRequired;
 
       return {
         course: subject.Course,
-        name: displayName || subject.Course,
+        name: settings.abbreviateNames ? subject.CourseAbbreviation : subject.Course,
         total,
         minRequired,
+        presentRaw,
         dutyLeave,
         medicalLeave,
         presentWithOD,
-        attendancePct,
-        attendanceWithMedicalPct,
-        classesNeededCurrent,
-        classesNeededWithMedical,
-        skippableCurrent,
-        skippableWithMedical,
-        isSafe,
+        currentPct,
+        withoutODPct,
+        withMLPct,
+        skippedIncludingOD,
+        wouldFailWithoutOD,
+        wouldFailWithoutMedical,
       };
     });
   }, [subjects, settings.abbreviateNames]);
 
-  const overallMetrics = useMemo(() => {
-    if (subjectMetrics.length === 0) return null;
+  const hasAnyOD = useMemo(() => metrics.some((s) => s.dutyLeave > 0), [metrics]);
+  const hasAnyML = useMemo(() => metrics.some((s) => s.medicalLeave > 0), [metrics]);
 
-    const totalClasses = subjectMetrics.reduce((sum, s) => sum + s.total, 0);
-    const currentPresent = subjectMetrics.reduce((sum, s) => sum + s.presentWithOD, 0);
-    const presentWithMedical = subjectMetrics.reduce(
-      (sum, s) => sum + Math.min(s.total, s.presentWithOD + s.medicalLeave),
-      0
-    );
-    const totalOD = subjectMetrics.reduce((sum, s) => sum + s.dutyLeave, 0);
-    const totalMedical = subjectMetrics.reduce((sum, s) => sum + s.medicalLeave, 0);
-    const atRiskSubjects = subjectMetrics.filter((s) => s.total > 0 && !s.isSafe).length;
-    const rescuedByMedical = subjectMetrics.filter(
-      (s) => s.total > 0 && !s.isSafe && s.attendanceWithMedicalPct >= s.minRequired
-    ).length;
+  const rewind = useMemo(() => {
+    if (metrics.length === 0) return null;
+
+    const sortedBySkippedDesc = [...metrics].sort((a, b) => b.skippedIncludingOD - a.skippedIncludingOD);
+    const sortedBySkippedAsc = [...metrics].sort((a, b) => a.skippedIncludingOD - b.skippedIncludingOD);
+
+    const mostSkipped = sortedBySkippedDesc[0];
+    const barelySkipped = sortedBySkippedAsc[0];
+
+    const totalSkipped = metrics.reduce((sum, s) => sum + s.skippedIncludingOD, 0);
+    const totalAttended = metrics.reduce((sum, s) => sum + s.presentRaw, 0);
+    const odSavedSubjects = metrics.filter((s) => s.wouldFailWithoutOD).length;
+    const medicalSavedSubjects = metrics.filter((s) => s.wouldFailWithoutMedical).length;
 
     return {
-      totalClasses,
-      currentPresent,
-      presentWithMedical,
-      totalOD,
-      totalMedical,
-      currentAverage: totalClasses > 0 ? (currentPresent / totalClasses) * 100 : 0,
-      withMedicalAverage: totalClasses > 0 ? (presentWithMedical / totalClasses) * 100 : 0,
-      atRiskSubjects,
-      rescuedByMedical,
+      mostSkipped,
+      barelySkipped,
+      totalSkipped,
+      totalSkippedMinutes: totalSkipped * 50,
+      totalAttended,
+      odSavedSubjects,
+      medicalSavedSubjects,
     };
-  }, [subjectMetrics]);
+  }, [metrics]);
 
-  if (!overallMetrics) {
+  if (!rewind) {
     return (
       <div className="flex items-center justify-center min-h-[300px] text-muted-foreground">
-        No subjects loaded yet. Add subjects to view analytics.
+        No subjects loaded yet. Add subjects to view your rewind.
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-6xl space-y-4 p-2 sm:p-4">
-      <Card>
+    <div className="w-full p-0">
+      <Card className="m-2 sm:m-3">
         <CardContent className="pt-6">
           <h2 className="text-2xl font-semibold">Your Attendance Rewind</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Current attendance uses <span className="font-medium">Present + OD</span>. Medical leave is shown separately as a projection.
+            A quick look at how this semester really went.
           </p>
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 px-2 sm:px-3">
         <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground mb-1">Current Attendance</p>
-            <p className="text-3xl font-bold">{overallMetrics.currentAverage.toFixed(2)}%</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {overallMetrics.currentPresent} / {overallMetrics.totalClasses}
+          <CardContent className="pt-5">
+            <p className="text-sm text-muted-foreground">Most skipped subject</p>
+            <p className="text-xl font-semibold mt-1">{rewind.mostSkipped.name}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {rewind.mostSkipped.skippedIncludingOD} skipped classes (OD included)
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground mb-1">With Medical Leave</p>
-            <p className="text-3xl font-bold">{overallMetrics.withMedicalAverage.toFixed(2)}%</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {overallMetrics.presentWithMedical} / {overallMetrics.totalClasses}
+          <CardContent className="pt-5">
+            <p className="text-sm text-muted-foreground">Barely skipped subject</p>
+            <p className="text-xl font-semibold mt-1">{rewind.barelySkipped.name}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {rewind.barelySkipped.skippedIncludingOD} skipped classes (OD included)
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground mb-1">Leaves Tracked</p>
-            <p className="text-3xl font-bold">{overallMetrics.totalOD + overallMetrics.totalMedical}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              OD {overallMetrics.totalOD} · ML {overallMetrics.totalMedical}
+          <CardContent className="pt-5">
+            <p className="text-sm text-muted-foreground">Total classes skipped</p>
+            <p className="text-xl font-semibold mt-1">{rewind.totalSkipped}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {rewind.totalSkippedMinutes} minutes ({(rewind.totalSkippedMinutes / 60).toFixed(1)} hours)
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground mb-1">Subjects at Risk</p>
-            <p className="text-3xl font-bold">{overallMetrics.atRiskSubjects}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {overallMetrics.rescuedByMedical} become safe with ML
+          <CardContent className="pt-5">
+            <p className="text-sm text-muted-foreground">Total classes attended</p>
+            <p className="text-xl font-semibold mt-1">{rewind.totalAttended}</p>
+            <p className="text-sm text-muted-foreground mt-1">Physical attendance count</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-5">
+            <p className="text-sm text-muted-foreground">Would fail without OD</p>
+            <p className="text-xl font-semibold mt-1">{rewind.odSavedSubjects}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {hasAnyOD ? 'Subjects saved by OD' : 'No OD records found'}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-5">
+            <p className="text-sm text-muted-foreground">Would fail without medical leave</p>
+            <p className="text-xl font-semibold mt-1">{rewind.medicalSavedSubjects}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {hasAnyML ? 'Subjects saved by medical leave' : 'No medical leave records found'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
+      <Card className="m-2 sm:m-3">
         <CardTitle className="px-6 pt-6">Per-subject breakdown</CardTitle>
         <CardContent className="pt-4">
           <div className="overflow-x-auto">
@@ -162,38 +173,23 @@ export function AttendanceRewindDashboard() {
                 <tr className="border-b text-muted-foreground">
                   <th className="text-left py-2 pr-3">Subject</th>
                   <th className="text-right py-2 px-2">Total</th>
-                  <th className="text-right py-2 px-2">Present</th>
-                  <th className="text-right py-2 px-2">OD</th>
-                  <th className="text-right py-2 px-2">ML</th>
+                  <th className="text-right py-2 px-2">Attended</th>
+                  <th className="text-right py-2 px-2">Skipped (OD incl.)</th>
                   <th className="text-right py-2 px-2">Current %</th>
-                  <th className="text-right py-2 px-2">With ML %</th>
-                  <th className="text-right py-2 pl-3">Action</th>
+                  {hasAnyOD && <th className="text-right py-2 px-2">Without OD %</th>}
+                  {hasAnyML && <th className="text-right py-2 px-2">With ML %</th>}
                 </tr>
               </thead>
               <tbody>
-                {subjectMetrics.map((subject) => (
+                {metrics.map((subject) => (
                   <tr key={subject.course} className="border-b last:border-b-0">
-                    <td className="py-2 pr-3 font-medium">{subject.name}</td>
+                    <td className="py-2 pr-3 font-medium">{subject.name || subject.course}</td>
                     <td className="py-2 px-2 text-right">{subject.total}</td>
-                    <td className="py-2 px-2 text-right">{subject.presentWithOD}</td>
-                    <td className="py-2 px-2 text-right">{subject.dutyLeave}</td>
-                    <td className="py-2 px-2 text-right">{subject.medicalLeave}</td>
-                    <td className="py-2 px-2 text-right">{subject.attendancePct.toFixed(2)}%</td>
-                    <td className="py-2 px-2 text-right">{subject.attendanceWithMedicalPct.toFixed(2)}%</td>
-                    <td className="py-2 pl-3 text-right">
-                      {subject.isSafe ? (
-                        <span className="text-green-600">Skip {subject.skippableCurrent}</span>
-                      ) : (
-                        <span className="text-red-500">Need {subject.classesNeededCurrent}</span>
-                      )}
-                      {subject.medicalLeave > 0 && (
-                        <div className="text-xs text-muted-foreground">
-                          ML: {subject.attendanceWithMedicalPct >= subject.minRequired
-                            ? `Skip ${subject.skippableWithMedical}`
-                            : `Need ${subject.classesNeededWithMedical}`}
-                        </div>
-                      )}
-                    </td>
+                    <td className="py-2 px-2 text-right">{subject.presentRaw}</td>
+                    <td className="py-2 px-2 text-right">{subject.skippedIncludingOD}</td>
+                    <td className="py-2 px-2 text-right">{subject.currentPct.toFixed(2)}%</td>
+                    {hasAnyOD && <td className="py-2 px-2 text-right">{subject.withoutODPct.toFixed(2)}%</td>}
+                    {hasAnyML && <td className="py-2 px-2 text-right">{subject.withMLPct.toFixed(2)}%</td>}
                   </tr>
                 ))}
               </tbody>
