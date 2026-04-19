@@ -1,7 +1,14 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { useSubjects } from '@/contexts/SubjectContext';
 
 type SubjectMetric = {
@@ -36,12 +43,13 @@ export function AttendanceRewindDashboard() {
       const minRequired = Math.max(0, subject.MinAttendancePercentage || 0);
 
       const realAttendance = Math.max(0, subject.present || 0);
-      const realAbsentFromSource = Number.isFinite(subject.absent) ? subject.absent : total - realAttendance;
+      const realAbsentFromSource =
+        Number.isFinite(subject.absent) ? subject.absent : total - realAttendance;
       const realAbsent = Math.max(0, realAbsentFromSource);
       const od = Math.max(0, subject.dutyLeave || 0);
       const ml = Math.max(0, subject.medicalLeave || 0);
 
-      // Rigid model requested by user:
+      // Rigid model:
       // FinalAttendance = RealAttendance + ODs
       // FinalAbsent = RealAbsent - ODs
       // FinalAttendanceWithML = FinalAttendance + ML
@@ -55,12 +63,17 @@ export function AttendanceRewindDashboard() {
       const withoutODPct = toPct(realAttendance, total);
       const withMLPct = toPct(finalAttendanceWithML, total);
 
-      const wouldFailWithoutOD = od > 0 && finalPct >= minRequired && withoutODPct < minRequired;
-      const wouldFailWithoutML = ml > 0 && withMLPct >= minRequired && finalPct < minRequired;
+      const wouldFailWithoutOD =
+        od > 0 && finalPct >= minRequired && withoutODPct < minRequired;
+      const wouldFailWithoutML =
+        ml > 0 && withMLPct >= minRequired && finalPct < minRequired;
 
       return {
         course: subject.Course,
-        name: (settings.abbreviateNames ? subject.CourseAbbreviation : subject.Course) || subject.Course,
+        name:
+          (settings.abbreviateNames
+            ? subject.CourseAbbreviation
+            : subject.Course) || subject.Course,
         total,
         minRequired,
         realAttendance,
@@ -93,6 +106,7 @@ export function AttendanceRewindDashboard() {
     const barelySkipped = bySkippedAsc[0];
     const totalSkipped = metrics.reduce((sum, s) => sum + s.finalAbsent, 0);
     const totalAttended = metrics.reduce((sum, s) => sum + s.finalAttendance, 0);
+    const totalClasses = metrics.reduce((sum, s) => sum + s.total, 0);
 
     return {
       mostSkipped,
@@ -100,6 +114,9 @@ export function AttendanceRewindDashboard() {
       totalSkipped,
       totalSkippedMinutes: totalSkipped * 50,
       totalAttended,
+      totalAttendedMinutes: totalAttended * 50,
+      totalClasses,
+      totalAttendancePct: toPct(totalAttended, totalClasses),
       failWithoutODCount: metrics.filter((s) => s.wouldFailWithoutOD).length,
       failWithoutMLCount: metrics.filter((s) => s.wouldFailWithoutML).length,
     };
@@ -114,70 +131,78 @@ export function AttendanceRewindDashboard() {
   }
 
   return (
-    <div className="w-full p-0">
-      <Card className="m-2 sm:m-3">
-        <CardContent className="pt-6">
-          <h2 className="text-2xl font-semibold">Your Attendance Rewind</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+    <div className="w-full space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Attendance Rewind</CardTitle>
+          <CardDescription>
             Based on FinalAttendance/FinalAbsent with OD and medical adjustments.
-          </p>
-        </CardContent>
+          </CardDescription>
+        </CardHeader>
       </Card>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 px-2 sm:px-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
-          <CardContent className="pt-5">
+          <CardContent className="space-y-1">
             <p className="text-sm text-muted-foreground">Most skipped subject</p>
-            <p className="text-xl font-semibold mt-1">{rewind.mostSkipped.name}</p>
-            <p className="text-sm text-muted-foreground mt-1">{rewind.mostSkipped.finalAbsent} skipped classes</p>
+            <p className="text-xl font-semibold">{rewind.mostSkipped.name}</p>
+            <p className="text-sm text-muted-foreground">
+              {rewind.mostSkipped.finalAbsent} skipped classes
+            </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-5">
+          <CardContent className="space-y-1">
             <p className="text-sm text-muted-foreground">Barely skipped subject</p>
-            <p className="text-xl font-semibold mt-1">{rewind.barelySkipped.name}</p>
-            <p className="text-sm text-muted-foreground mt-1">{rewind.barelySkipped.finalAbsent} skipped classes</p>
+            <p className="text-xl font-semibold">{rewind.barelySkipped.name}</p>
+            <p className="text-sm text-muted-foreground">
+              {rewind.barelySkipped.finalAbsent} skipped classes
+            </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-5">
+          <CardContent className="space-y-1">
             <p className="text-sm text-muted-foreground">Total classes skipped</p>
-            <p className="text-xl font-semibold mt-1">{rewind.totalSkipped}</p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xl font-semibold">{rewind.totalSkipped}</p>
+            <p className="text-sm text-muted-foreground">
               {rewind.totalSkippedMinutes} minutes ({(rewind.totalSkippedMinutes / 60).toFixed(1)} hours)
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-5">
+          <CardContent className="space-y-1">
             <p className="text-sm text-muted-foreground">Total classes attended</p>
-            <p className="text-xl font-semibold mt-1">{rewind.totalAttended}</p>
-            <p className="text-sm text-muted-foreground mt-1">Final attendance count</p>
+            <p className="text-xl font-semibold">{rewind.totalAttended}</p>
+            <p className="text-sm text-muted-foreground">
+              {rewind.totalAttendedMinutes} minutes ({(rewind.totalAttendedMinutes / 60).toFixed(1)} hours)
+            </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-5">
+          <CardContent className="space-y-1">
             <p className="text-sm text-muted-foreground">Would fail without ODs</p>
-            <p className="text-xl font-semibold mt-1">{rewind.failWithoutODCount}</p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xl font-semibold">{rewind.failWithoutODCount}</p>
+            <p className="text-sm text-muted-foreground">
               {hasAnyOD ? 'Subjects saved by OD' : 'No OD records found'}
             </p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-5">
+          <CardContent className="space-y-1">
             <p className="text-sm text-muted-foreground">Would fail without medical leave</p>
-            <p className="text-xl font-semibold mt-1">{rewind.failWithoutMLCount}</p>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xl font-semibold">{rewind.failWithoutMLCount}</p>
+            <p className="text-sm text-muted-foreground">
               {hasAnyML ? 'Subjects saved by ML' : 'No medical leave records found'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="m-2 sm:m-3">
-        <CardTitle className="px-6 pt-6">Per-subject breakdown</CardTitle>
-        <CardContent className="pt-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Per-subject breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -207,6 +232,10 @@ export function AttendanceRewindDashboard() {
             </table>
           </div>
         </CardContent>
+        <CardFooter className="border-t justify-between">
+          <span className="text-sm text-muted-foreground">Total attendance percentage</span>
+          <span className="font-semibold">{rewind.totalAttendancePct.toFixed(2)}%</span>
+        </CardFooter>
       </Card>
     </div>
   );
