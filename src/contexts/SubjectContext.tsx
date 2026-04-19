@@ -25,6 +25,8 @@ interface Settings {
   abbreviateNames: boolean;
   showAddSubjects: boolean;
   titlePayload?: string;
+  advancedMode: boolean;
+  showODPercentage: boolean;
 }
 
 interface SubjectState {
@@ -43,6 +45,8 @@ type SubjectAction =
   | { type: 'SET_TITLE_PAYLOAD'; payload: string | undefined }
   | { type: 'DELETE_ALL_SUBJECTS' }
   | { type: 'SET_LOADED'; payload: boolean }
+  | { type: 'TOGGLE_ADVANCED_MODE' }
+  | { type: 'TOGGLE_SHOW_OD_PERCENTAGE' }
 
 interface SubjectContextType {
   subjects: SubjectData[]
@@ -56,6 +60,8 @@ interface SubjectContextType {
     setShowAddSubjects: (show: boolean) => void
     setTitlePayload: (title: string | undefined) => void
     deleteAllSubjects: () => void
+    toggleAdvancedMode: () => void
+    toggleShowODPercentage: () => void
   }
 }
 
@@ -66,6 +72,8 @@ const initialState: SubjectState = {
     abbreviateNames: true,
     showAddSubjects: true,
     titlePayload: undefined,
+    advancedMode: false,
+    showODPercentage: false,
   },
   isLoaded: false,
 }
@@ -143,6 +151,24 @@ function subjectReducer(state: SubjectState, action: SubjectAction): SubjectStat
         isLoaded: action.payload,
       }
     
+    case 'TOGGLE_ADVANCED_MODE':
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          advancedMode: !state.settings.advancedMode,
+        },
+      }
+    
+    case 'TOGGLE_SHOW_OD_PERCENTAGE':
+      return {
+        ...state,
+        settings: {
+          ...state.settings,
+          showODPercentage: !state.settings.showODPercentage,
+        },
+      }
+    
     default:
       return state
   }
@@ -204,6 +230,12 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
         if (typeof settings.titlePayload === 'string') {
           dispatch({ type: 'SET_TITLE_PAYLOAD', payload: settings.titlePayload })
         }
+        if (typeof settings.advancedMode === 'boolean' && settings.advancedMode) {
+          dispatch({ type: 'TOGGLE_ADVANCED_MODE' })
+        }
+        if (typeof settings.showODPercentage === 'boolean' && settings.showODPercentage) {
+          dispatch({ type: 'TOGGLE_SHOW_OD_PERCENTAGE' })
+        }
       }
     } catch (error) {
       console.error("Failed to load data from localStorage:", error)
@@ -262,6 +294,14 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
         localStorage.removeItem("subjectsData")
         window.dispatchEvent(new Event("localDataUpdated"))
       }
+    },
+
+    toggleAdvancedMode: () => {
+      dispatch({ type: 'TOGGLE_ADVANCED_MODE' })
+    },
+
+    toggleShowODPercentage: () => {
+      dispatch({ type: 'TOGGLE_SHOW_OD_PERCENTAGE' })
     },
   }), []);
 

@@ -38,9 +38,19 @@ export function SettingsPopup() {
                 <DialogHeader>
                     <DialogTitle>Settings</DialogTitle>
                 </DialogHeader>
-                <div className="flex items-center space-x-2 mx-4 mt-0 mb-0">
-                    <Label htmlFor="abbr">Abbreviate:</Label>
+                <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
+                    <Label htmlFor="abbr">Abbreviate Names:</Label>
                     <Switch id="abbr" checked={settings.abbreviateNames} onCheckedChange={actions.toggleAbbreviation} />
+                </div>
+
+                <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
+                    <Label htmlFor="advanced">Advanced Mode:</Label>
+                    <Switch id="advanced" checked={settings.advancedMode} onCheckedChange={actions.toggleAdvancedMode} />
+                </div>
+
+                <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
+                    <Label htmlFor="od-perc">Show OD Percentage:</Label>
+                    <Switch id="od-perc" checked={settings.showODPercentage} onCheckedChange={actions.toggleShowODPercentage} />
                 </div>
                 
                 <div className="mx-4 mt-4 mb-0">
