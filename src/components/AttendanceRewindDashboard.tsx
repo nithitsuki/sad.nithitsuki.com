@@ -27,6 +27,9 @@ type SubjectMetric = {
   finalPct: number;
   withoutODPct: number;
   withMLPct: number;
+  withoutODAttendance: number;
+  withoutMLAttendance: number;
+  withoutODAndMLAttendance: number;
   wouldFailWithoutOD: boolean;
   wouldFailWithoutML: boolean;
 };
@@ -59,6 +62,14 @@ export function AttendanceRewindDashboard() {
       const finalAttendanceWithML = Math.min(total, Math.max(0, finalAttendance + ml));
       const finalAbsentWithML = Math.max(0, finalAbsent - ml);
 
+      // Variants for total percentage footer.
+      // "Without ODs" keeps ML effect.
+      const withoutODAttendance = Math.min(total, Math.max(0, realAttendance + ml));
+      // "Without ML" keeps OD effect.
+      const withoutMLAttendance = finalAttendance;
+      // "Without ODs & ML" is raw real attendance.
+      const withoutODAndMLAttendance = realAttendance;
+
       const finalPct = toPct(finalAttendance, total);
       const withoutODPct = toPct(realAttendance, total);
       const withMLPct = toPct(finalAttendanceWithML, total);
@@ -87,6 +98,9 @@ export function AttendanceRewindDashboard() {
         finalPct,
         withoutODPct,
         withMLPct,
+        withoutODAttendance,
+        withoutMLAttendance,
+        withoutODAndMLAttendance,
         wouldFailWithoutOD,
         wouldFailWithoutML,
       };
@@ -108,6 +122,23 @@ export function AttendanceRewindDashboard() {
     const totalAttended = metrics.reduce((sum, s) => sum + s.finalAttendance, 0);
     const totalClasses = metrics.reduce((sum, s) => sum + s.total, 0);
 
+    const totalAttendanceWithAll = metrics.reduce(
+      (sum, s) => sum + s.finalAttendanceWithML,
+      0
+    );
+    const totalAttendanceWithoutOD = metrics.reduce(
+      (sum, s) => sum + s.withoutODAttendance,
+      0
+    );
+    const totalAttendanceWithoutML = metrics.reduce(
+      (sum, s) => sum + s.withoutMLAttendance,
+      0
+    );
+    const totalAttendanceWithoutODAndML = metrics.reduce(
+      (sum, s) => sum + s.withoutODAndMLAttendance,
+      0
+    );
+
     return {
       mostSkipped,
       barelySkipped,
@@ -115,8 +146,10 @@ export function AttendanceRewindDashboard() {
       totalSkippedMinutes: totalSkipped * 50,
       totalAttended,
       totalAttendedMinutes: totalAttended * 50,
-      totalClasses,
-      totalAttendancePct: toPct(totalAttended, totalClasses),
+      totalAttendancePct: toPct(totalAttendanceWithAll, totalClasses),
+      totalWithoutODPct: toPct(totalAttendanceWithoutOD, totalClasses),
+      totalWithoutMLPct: toPct(totalAttendanceWithoutML, totalClasses),
+      totalWithoutODAndMLPct: toPct(totalAttendanceWithoutODAndML, totalClasses),
       failWithoutODCount: metrics.filter((s) => s.wouldFailWithoutOD).length,
       failWithoutMLCount: metrics.filter((s) => s.wouldFailWithoutML).length,
     };
@@ -136,7 +169,7 @@ export function AttendanceRewindDashboard() {
         <CardHeader>
           <CardTitle>Your Attendance Rewind</CardTitle>
           <CardDescription>
-            Based on FinalAttendance/FinalAbsent with OD and medical adjustments.
+            Semester summary using the same attendance rules as the dashboard.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -201,6 +234,9 @@ export function AttendanceRewindDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Per-subject breakdown</CardTitle>
+          <CardDescription>
+            Final values after attendance adjustments.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -232,9 +268,29 @@ export function AttendanceRewindDashboard() {
             </table>
           </div>
         </CardContent>
-        <CardFooter className="border-t justify-between">
-          <span className="text-sm text-muted-foreground">Total attendance percentage</span>
-          <span className="font-semibold">{rewind.totalAttendancePct.toFixed(2)}%</span>
+        <CardFooter className="border-t flex-col items-stretch gap-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Total attendance percentage</span>
+            <span className="font-semibold">{rewind.totalAttendancePct.toFixed(2)}%</span>
+          </div>
+          {hasAnyOD && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Without ODs</span>
+              <span className="font-medium">{rewind.totalWithoutODPct.toFixed(2)}%</span>
+            </div>
+          )}
+          {hasAnyML && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Without ML</span>
+              <span className="font-medium">{rewind.totalWithoutMLPct.toFixed(2)}%</span>
+            </div>
+          )}
+          {hasAnyOD && hasAnyML && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Without ODs &amp; ML</span>
+              <span className="font-medium">{rewind.totalWithoutODAndMLPct.toFixed(2)}%</span>
+            </div>
+          )}
         </CardFooter>
       </Card>
     </div>
