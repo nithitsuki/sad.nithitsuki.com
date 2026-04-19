@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useState } from "react";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -24,13 +24,18 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useSubjects } from "@/contexts/SubjectContext";
 
-export function SettingsPopup() {
+interface SettingsPopupProps {
+    onOpenYar?: () => void;
+}
+
+export function SettingsPopup({ onOpenYar }: SettingsPopupProps) {
     const { isDemoMode, settings, actions } = useSubjects();
+    const [open, setOpen] = useState(false);
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button size="icon" className="ml-4 mb-0">
+                <Button size="icon" className="mb-0">
                     <FiSettings />
                 </Button>
             </DialogTrigger>
@@ -38,9 +43,27 @@ export function SettingsPopup() {
                 <DialogHeader>
                     <DialogTitle>Settings</DialogTitle>
                 </DialogHeader>
-                <div className="flex items-center space-x-2 mx-4 mt-0 mb-0">
-                    <Label htmlFor="abbr">Abbreviate:</Label>
+                <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
+                    <Label htmlFor="abbr">Abbreviate Names:</Label>
                     <Switch id="abbr" checked={settings.abbreviateNames} onCheckedChange={actions.toggleAbbreviation} />
+                </div>
+
+                <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
+                    <Label htmlFor="od-perc">Show OD Percentage:</Label>
+                    <Switch id="od-perc" checked={settings.showODPercentage} onCheckedChange={actions.setShowODPercentage} />
+                </div>
+
+                <div className="mx-4 mt-0 mb-4">
+                    <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => {
+                            onOpenYar?.();
+                            setOpen(false);
+                        }}
+                    >
+                        Open Your Attendance Rewind (YAR!)
+                    </Button>
                 </div>
                 
                 <div className="mx-4 mt-4 mb-0">

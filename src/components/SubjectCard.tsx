@@ -203,6 +203,8 @@ export default function SubjectCard({ subject }: SubjectCardProps) {
                                 <MyPieChart
                                     total={localTotal}
                                     present={localPresent}
+                                    dutyLeave={subject.dutyLeave || 0}
+                                    showODPercentage={settings.showODPercentage}
                                     AttendancePercentageRounded={AttendancePercentageRounded}
                                     backgroundColor={borderColor}
                                 />
