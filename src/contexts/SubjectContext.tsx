@@ -45,8 +45,8 @@ type SubjectAction =
   | { type: 'SET_TITLE_PAYLOAD'; payload: string | undefined }
   | { type: 'DELETE_ALL_SUBJECTS' }
   | { type: 'SET_LOADED'; payload: boolean }
-  | { type: 'TOGGLE_ADVANCED_MODE' }
-  | { type: 'TOGGLE_SHOW_OD_PERCENTAGE' }
+  | { type: 'SET_ADVANCED_MODE'; payload: boolean }
+  | { type: 'SET_SHOW_OD_PERCENTAGE'; payload: boolean }
 
 interface SubjectContextType {
   subjects: SubjectData[]
@@ -60,8 +60,8 @@ interface SubjectContextType {
     setShowAddSubjects: (show: boolean) => void
     setTitlePayload: (title: string | undefined) => void
     deleteAllSubjects: () => void
-    toggleAdvancedMode: () => void
-    toggleShowODPercentage: () => void
+    setAdvancedMode: (enabled: boolean) => void
+    setShowODPercentage: (enabled: boolean) => void
   }
 }
 
@@ -151,21 +151,21 @@ function subjectReducer(state: SubjectState, action: SubjectAction): SubjectStat
         isLoaded: action.payload,
       }
     
-    case 'TOGGLE_ADVANCED_MODE':
+    case 'SET_ADVANCED_MODE':
       return {
         ...state,
         settings: {
           ...state.settings,
-          advancedMode: !state.settings.advancedMode,
+          advancedMode: action.payload,
         },
       }
     
-    case 'TOGGLE_SHOW_OD_PERCENTAGE':
+    case 'SET_SHOW_OD_PERCENTAGE':
       return {
         ...state,
         settings: {
           ...state.settings,
-          showODPercentage: !state.settings.showODPercentage,
+          showODPercentage: action.payload,
         },
       }
     
@@ -230,11 +230,11 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
         if (typeof settings.titlePayload === 'string') {
           dispatch({ type: 'SET_TITLE_PAYLOAD', payload: settings.titlePayload })
         }
-        if (typeof settings.advancedMode === 'boolean' && settings.advancedMode) {
-          dispatch({ type: 'TOGGLE_ADVANCED_MODE' })
+        if (typeof settings.advancedMode === 'boolean') {
+          dispatch({ type: 'SET_ADVANCED_MODE', payload: settings.advancedMode })
         }
-        if (typeof settings.showODPercentage === 'boolean' && settings.showODPercentage) {
-          dispatch({ type: 'TOGGLE_SHOW_OD_PERCENTAGE' })
+        if (typeof settings.showODPercentage === 'boolean') {
+          dispatch({ type: 'SET_SHOW_OD_PERCENTAGE', payload: settings.showODPercentage })
         }
       }
     } catch (error) {
@@ -296,12 +296,12 @@ export function SubjectProvider({ children }: SubjectProviderProps) {
       }
     },
 
-    toggleAdvancedMode: () => {
-      dispatch({ type: 'TOGGLE_ADVANCED_MODE' })
+    setAdvancedMode: (enabled: boolean) => {
+      dispatch({ type: 'SET_ADVANCED_MODE', payload: enabled })
     },
 
-    toggleShowODPercentage: () => {
-      dispatch({ type: 'TOGGLE_SHOW_OD_PERCENTAGE' })
+    setShowODPercentage: (enabled: boolean) => {
+      dispatch({ type: 'SET_SHOW_OD_PERCENTAGE', payload: enabled })
     },
   }), []);
 

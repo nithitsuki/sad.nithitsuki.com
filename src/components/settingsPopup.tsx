@@ -45,12 +45,12 @@ export function SettingsPopup() {
 
                 <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
                     <Label htmlFor="advanced">Advanced Mode:</Label>
-                    <Switch id="advanced" checked={settings.advancedMode} onCheckedChange={actions.toggleAdvancedMode} />
+                    <Switch id="advanced" checked={settings.advancedMode} onCheckedChange={actions.setAdvancedMode} />
                 </div>
 
                 <div className="flex items-center space-x-2 mx-4 mt-0 mb-4">
                     <Label htmlFor="od-perc">Show OD Percentage:</Label>
-                    <Switch id="od-perc" checked={settings.showODPercentage} onCheckedChange={actions.toggleShowODPercentage} />
+                    <Switch id="od-perc" checked={settings.showODPercentage} onCheckedChange={actions.setShowODPercentage} />
                 </div>
                 
                 <div className="mx-4 mt-4 mb-0">

@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import SubjectCard from "@/components/SubjectCard";
 import { AdvancedModePanel } from './AdvancedModePanel';
 import { AttendanceRewindDashboard } from './AttendanceRewindDashboard';
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSubjects, type SubjectData } from "@/contexts/SubjectContext";
 
@@ -15,6 +15,13 @@ export default function SubjectDisplayArea() {
     const [sortType, setSortType] = useState<string>("none");
     const [viewMode, setViewMode] = useState<'normal' | 'advanced' | 'rewind'>('normal');
     const router = useRouter();
+    const effectiveViewMode = settings.advancedMode ? viewMode : 'normal';
+
+    useEffect(() => {
+        if (!settings.advancedMode && viewMode !== 'normal') {
+            setViewMode('normal');
+        }
+    }, [settings.advancedMode, viewMode]);
 
     const handleExitDemo = () => {
         actions.setDemoMode(false);
@@ -72,19 +79,19 @@ export default function SubjectDisplayArea() {
             {settings.advancedMode && (
                 <div className="flex gap-2 justify-center mb-4 flex-wrap">
                     <Button 
-                        variant={viewMode === 'normal' ? 'default' : 'outline'}
+                        variant={effectiveViewMode === 'normal' ? 'default' : 'outline'}
                         onClick={() => setViewMode('normal')}
                     >
                         Dashboard
                     </Button>
                     <Button 
-                        variant={viewMode === 'advanced' ? 'default' : 'outline'}
+                        variant={effectiveViewMode === 'advanced' ? 'default' : 'outline'}
                         onClick={() => setViewMode('advanced')}
                     >
                         Advanced
                     </Button>
                     <Button 
-                        variant={viewMode === 'rewind' ? 'default' : 'outline'}
+                        variant={effectiveViewMode === 'rewind' ? 'default' : 'outline'}
                         onClick={() => setViewMode('rewind')}
                     >
                         YAR! 📊
@@ -93,17 +100,17 @@ export default function SubjectDisplayArea() {
             )}
 
             {/* Advanced Mode Panel View */}
-            {viewMode === 'advanced' && settings.advancedMode && (
+            {effectiveViewMode === 'advanced' && (
                 <AdvancedModePanel />
             )}
 
             {/* Attendance Rewind Dashboard View */}
-            {viewMode === 'rewind' && settings.advancedMode && (
+            {effectiveViewMode === 'rewind' && (
                 <AttendanceRewindDashboard />
             )}
 
             {/* Normal Dashboard View */}
-            {viewMode === 'normal' && (
+            {effectiveViewMode === 'normal' && (
                 <div id="translucent" className="h-full w-min sm:w-auto sm:p-2 sm:pt-0 sm:max-w-[95vw] flex flex-col justify-center items-center  rounded-md border bg-[#0000001c] backdrop-blur-[1.5px] mt-0">
                     <div id="main-row" className="flex flex-row w-full justify-between items-center px-2 py-0 my-0">
                         <Select onValueChange={setSortType} defaultValue="none">
