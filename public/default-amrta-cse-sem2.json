@@ -7,7 +7,8 @@
     "present": 29,
     "absent": 3,
     "percentage": 90.63,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 1
   },
   {
     "Sl_No": "2",
@@ -17,7 +18,8 @@
     "present": 14,
     "absent": 4,
     "percentage": 77.78,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 1
   },
   {
     "Sl_No": "3",
@@ -27,7 +29,8 @@
     "present": 62,
     "absent": 10,
     "percentage": 86.11,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 3
   },
   {
     "Sl_No": "4",
@@ -37,7 +40,8 @@
     "present": 47,
     "absent": 5,
     "percentage": 90.38,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 2
   },
   {
     "Sl_No": "5",
@@ -47,7 +51,8 @@
     "present": 54,
     "absent": 14,
     "percentage": 79.41,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 3
   },
   {
     "Sl_No": "6",
@@ -57,17 +62,19 @@
     "present": 51,
     "absent": 13,
     "percentage": 79.69,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 3
   },
   {
     "Sl_No": "7",
-    "Course": "Manufacturing Practice",
-    "CourseAbbreviation": "M.P",
+    "Course": "Technical Communication",
+    "CourseAbbreviation": "T.C",
     "total": 41,
     "present": 30,
     "absent": 11,
     "percentage": 73,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 2
   },
   {
     "Sl_No": "8",
@@ -77,6 +84,7 @@
     "present": 35,
     "absent": 8,
     "percentage": 81.4,
-    "MinAttendancePercentage": 75
+    "MinAttendancePercentage": 75,
+    "daysPerWeek": 2
   }
 ]
