@@ -8,18 +8,18 @@
     "absent": 3,
     "percentage": 90.63,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 2
+    "daysOfWeek": [1,5]
   },
   {
     "Sl_No": "2",
-    "Course": "Technical Communicatoin",
+    "Course": "Technical Communication",
     "CourseAbbreviation": "T.C",
     "total": 18,
     "present": 14,
     "absent": 4,
     "percentage": 77.78,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 3
+    "daysOfWeek": [3,4]
   },
   {
     "Sl_No": "3",
@@ -30,7 +30,7 @@
     "absent": 10,
     "percentage": 86.11,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 4
+    "daysOfWeek": [1,3,4,5]
   },
   {
     "Sl_No": "4",
@@ -41,7 +41,7 @@
     "absent": 5,
     "percentage": 90.38,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 3
+    "daysOfWeek": [1,2,5]
   },
   {
     "Sl_No": "5",
@@ -52,7 +52,7 @@
     "absent": 14,
     "percentage": 79.41,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 4
+    "daysOfWeek": [1,2,3,5]
   },
   {
     "Sl_No": "6",
@@ -63,7 +63,7 @@
     "absent": 13,
     "percentage": 79.69,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 4
+    "daysOfWeek": [1,2,3,4]
   },
   {
     "Sl_No": "8",
@@ -74,6 +74,6 @@
     "absent": 8,
     "percentage": 81.4,
     "MinAttendancePercentage": 75
-    "dayPerWeek": 3
+    "daysOfWeek": [1,2,4]
   }
 ]
